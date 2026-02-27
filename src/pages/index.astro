@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Javier | Portfolio" description="Portfolio con fondo por pantalla.">
+  <main
+    class="h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat"
+    style="background-image: url('/background.PNG');"
+  >
+    <nav class="w-full">
+      <ul
+        class="flex w-full items-center text-sm font-semibold uppercase tracking-[0.14em]"
+        style="background-color: var(--nav-base); color: var(--nav-text);"
+      >
+        <li class="flex-1 border-r py-4 text-center" style="border-color: var(--nav-text);"><a href="#home">Home</a></li>
+        <li class="flex-1 border-r py-4 text-center" style="border-color: var(--nav-text);"><a href="#tos">TOS</a></li>
+        <li class="flex-1 border-r py-4 text-center" style="border-color: var(--nav-text);"><a href="#prices">Prices</a></li>
+        <li class="flex-1 py-4 text-center"><a href="#art">Art</a></li>
+      </ul>
+    </nav>
+  </main>
+</BaseLayout>
