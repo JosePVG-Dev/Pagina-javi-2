@@ -1,0 +1,56 @@
+/* WordArt: relleno con degradado arcoíris, contorno fino claro y una copia
+   gris desplazada detrás, al estilo de los rótulos de Word. Es texto real
+   (seleccionable y accesible), no una imagen. */
+
+.wordart {
+  position: relative;
+  display: inline-block;
+  transform: scaleY(1.55) rotate(-4deg);
+  transform-origin: left center;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow', 'Arial Black', sans-serif;
+  font-size: clamp(26px, 4.4vw, 44px);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.wordart__text {
+  position: relative;
+  display: block;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.016em #eaeaea;
+  background-image: linear-gradient(
+    270deg,
+    #a104ad,
+    #0b2be0,
+    #329941,
+    #f7f658,
+    #f16412,
+    #e92153,
+    #aa04a7
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.wordart__shade {
+  position: absolute;
+  inset: 0;
+  color: #cdcdcd;
+  -webkit-text-fill-color: #cdcdcd;
+  transform: translate(0.055em, 0.075em);
+}
+
+.wordart-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .wordart-wrap {
+    justify-content: flex-start;
+    padding-left: 0.5rem;
+  }
+}
