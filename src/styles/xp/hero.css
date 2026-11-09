@@ -22,22 +22,43 @@
 }
 
 #inicio .hero-actions .button.primary {
-  background: linear-gradient(180deg, #7db8ff 0%, #3d95ff 45%, #0b62d8 55%, #0046c8 100%);
+  background: linear-gradient(
+    180deg,
+    #a9d2f8 0%,
+    #74b4f2 12%,
+    #3f91ea 42%,
+    #1271dd 50%,
+    #0a5ed2 88%,
+    #0247bd 100%
+  );
   border-color: #003c74;
   color: #ffffff;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
   box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px -2px 1px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    inset 1px 0 0 rgba(255, 255, 255, 0.28),
+    inset -1px 0 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
     1px 1px 0 #c9c4b8;
 }
 
 #inicio .hero-actions .button.primary:hover {
-  background: linear-gradient(180deg, #93c6ff 0%, #52a4ff 45%, #1a72e8 55%, #0a53d6 100%);
+  background: linear-gradient(
+    180deg,
+    #c0e0ff 0%,
+    #8ec6f8 12%,
+    #55a5f4 42%,
+    #2281e8 50%,
+    #1470de 88%,
+    #0a57c9 100%
+  );
 }
 
 #inicio .hero-actions .button.primary:active {
-  background: linear-gradient(180deg, #0046c8 0%, #0b62d8 55%, #3d95ff 100%);
+  background: linear-gradient(180deg, #0b57c6 0%, #1468cf 55%, #3f8fe2 100%);
+  box-shadow:
+    inset 1px 2px 2px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.18);
 }
 
 @media (max-width: 420px) {
