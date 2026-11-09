@@ -12,3 +12,22 @@
     padding: 2rem 2.25rem;
   }
 }
+
+/* Crédito del pie: la barra de estado XP es azul con texto blanco, así que el
+   enlace hereda el color y se distingue por subrayado, no por color. */
+.footer-credit {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.6);
+  text-underline-offset: 2px;
+}
+
+.footer-credit:hover {
+  background: rgba(255, 255, 255, 0.18);
+  text-decoration-color: #ffffff;
+}
+
+.footer-credit:focus-visible {
+  outline: 1px dotted #ffffff;
+  outline-offset: 2px;
+}
