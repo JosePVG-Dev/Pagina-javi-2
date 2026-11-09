@@ -1,8 +1,19 @@
+---
+import { t, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t[lang].footer;
+---
+
 <footer class="bottom-panel">
   <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-1 text-[11px]">
     <span>© {new Date().getFullYear()} Javiera</span>
     <span class="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span>Ilustración · Diseño · Arte digital</span>
+      <span>{copy.tagline}</span>
       <span aria-hidden="true" class="opacity-70">|</span>
       <a
         href="https://josepvg.dev"
@@ -10,7 +21,7 @@
         rel="noopener noreferrer"
         class="footer-credit"
       >
-        Desarrollado por josepvg.dev
+        {copy.credit}
       </a>
     </span>
   </div>

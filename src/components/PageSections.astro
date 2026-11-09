@@ -1,0 +1,25 @@
+---
+import '../styles/xp/layout.css';
+import Nav from './sections/Nav.astro';
+import Hero from './sections/Hero.astro';
+import Precios from './sections/Precios.astro';
+import Catalogo from './sections/Catalogo.astro';
+import Contacto from './sections/Contacto.astro';
+import Footer from './sections/Footer.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<div class="xp-section bg-[var(--window-bg)]">
+  <Nav lang={lang} />
+  <Hero lang={lang} />
+  <Precios lang={lang} />
+  <Catalogo lang={lang} />
+  <Contacto lang={lang} />
+  <Footer lang={lang} />
+</div>

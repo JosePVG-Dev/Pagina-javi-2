@@ -2,22 +2,35 @@
 import { Image } from 'astro:assets';
 import '../../styles/xp/theme.css';
 import '../../styles/xp/precios.css';
-import { plans, photos, plansById } from '../../data/planes';
+import { plans, photos } from '../../data/planes';
+import { fill, t, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t[lang].pricing;
+const plansCopy = t[lang].plans;
+const firstPlanName = plansCopy[plans[0].id].name;
 ---
 
 <section id="precios" class="px-6 py-6 md:px-10 md:py-8">
   <div class="xp-group mx-auto max-w-6xl">
     <header class="max-w-2xl">
-      <h2 class="text-[26px] leading-tight font-bold">Tarifas claras</h2>
+      <h2 class="text-[26px] leading-tight font-bold">{copy.heading}</h2>
       <p class="mt-2 text-[12px] leading-relaxed text-[#4a4a4a]">
-        Precios de referencia en dólares. Cada proyecto se cotiza según
-        complejidad, formato y uso final.
+        {copy.intro}
       </p>
     </header>
 
     <hr class="my-6" />
 
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-start" data-pricing>
+    <div
+      class="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-start"
+      data-pricing
+      data-plan-template={copy.choosePlan}
+    >
       <!-- 40%: precios -->
       <div>
         <ul class="list price-list">
@@ -32,8 +45,10 @@ import { plans, photos, plansById } from '../../data/planes';
                   aria-current={i === 0 ? 'true' : 'false'}
                 >
                   <span>
-                    <span class="price-row-name" data-plan-name>{plan.name}</span>
-                    <span class="price-row-tag">{plan.tag}</span>
+                    <span class="price-row-name" data-plan-name>
+                      {plansCopy[plan.id].name}
+                    </span>
+                    <span class="price-row-tag">{plansCopy[plan.id].tag}</span>
                   </span>
                   <span class="price-row-amount">
                     <span>$</span>{plan.price}
@@ -49,7 +64,7 @@ import { plans, photos, plansById } from '../../data/planes';
           class="button mt-4 block w-full text-[11px] tracking-[0.12em] uppercase"
           data-cta
         >
-          Elegir plan {plans[0].name}
+          {fill(copy.choosePlan, { name: firstPlanName })}
         </a>
       </div>
 
@@ -57,8 +72,8 @@ import { plans, photos, plansById } from '../../data/planes';
       <div
         id="precios-carrusel"
         role="region"
-        aria-roledescription="carrusel"
-        aria-label="Ejemplos por plan"
+        aria-roledescription={copy.carouselRole}
+        aria-label={copy.regionLabel}
         data-carousel
       >
         <div class="carousel-viewport" data-viewport>
@@ -69,13 +84,13 @@ import { plans, photos, plansById } from '../../data/planes';
                   class="carousel-slide"
                   data-slide={i}
                   role="group"
-                  aria-roledescription="diapositiva"
-                  aria-label={`${i + 1} de ${photos.length}`}
+                  aria-roledescription={copy.slideRole}
+                  aria-label={fill(copy.slideLabel, { n: i + 1, total: photos.length })}
                   aria-hidden={i === 0 ? 'false' : 'true'}
                 >
                   <Image
                     src={photo.src}
-                    alt={photo.alt}
+                    alt={t[lang].photoAlts[photo.id]}
                     widths={[600, 1200]}
                     sizes="(min-width: 768px) 600px, 90vw"
                     format="webp"
@@ -98,7 +113,7 @@ import { plans, photos, plansById } from '../../data/planes';
                   type="button"
                   class="carousel-dot"
                   data-dot={i}
-                  aria-label={`Ver ${plansById.get(photo.id)?.name ?? `foto ${i + 1}`}`}
+                  aria-label={fill(copy.viewPhoto, { name: plansCopy[photo.id].name })}
                   aria-current={i === 0 ? 'true' : 'false'}
                 />
               ))
@@ -110,7 +125,7 @@ import { plans, photos, plansById } from '../../data/planes';
               type="button"
               class="button carousel-arrow carousel-arrow--prev"
               data-prev
-              aria-label="Foto anterior"
+              aria-label={copy.prev}
             >
               ←
             </button>
@@ -118,7 +133,7 @@ import { plans, photos, plansById } from '../../data/planes';
               type="button"
               class="button carousel-arrow carousel-arrow--next"
               data-next
-              aria-label="Foto siguiente"
+              aria-label={copy.next}
             >
               →
             </button>
@@ -139,6 +154,7 @@ import { plans, photos, plansById } from '../../data/planes';
     const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-price-row]'));
     const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-dot]'));
     const cta = root.querySelector<HTMLElement>('[data-cta]');
+    const ctaTemplate = root.dataset.planTemplate ?? '{name}';
     const names = rows.map(
       (row) => row.querySelector('[data-plan-name]')?.textContent?.trim() ?? ''
     );
@@ -162,7 +178,7 @@ import { plans, photos, plansById } from '../../data/planes';
       rows.forEach((row, i) => row.setAttribute('aria-current', String(i === index)));
       dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
 
-      if (cta && names[index]) cta.textContent = `Elegir plan ${names[index]}`;
+      if (cta && names[index]) cta.textContent = ctaTemplate.replace('{name}', names[index]);
     };
 
     root.querySelector('[data-prev]')?.addEventListener('click', () => goTo(index - 1));

@@ -1,10 +1,73 @@
+---
+import { langLabels, routes, t, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t[lang].nav;
+const languages: Lang[] = ['es', 'en'];
+---
+
 <header class="top-panel sticky top-0 z-20">
   <nav class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-1.5">
     <a href="#inicio" class="text-[12px] font-bold uppercase tracking-[0.25em]">Javiera</a>
-    <ul class="flex items-center gap-1 text-[11px]">
-      <li><a href="#precios" class="block px-2 py-1 hover:bg-white/25">Precios</a></li>
-      <li><a href="#catalogo" class="block px-2 py-1 hover:bg-white/25">Catálogo</a></li>
-      <li><a href="#contacto" class="block px-2 py-1 hover:bg-white/25">Contacto</a></li>
-    </ul>
+    <div class="flex items-center gap-2">
+      <ul class="flex items-center gap-1 text-[11px]">
+        <li><a href="#precios" class="block px-2 py-1 hover:bg-white/25">{copy.pricing}</a></li>
+        <li><a href="#catalogo" class="block px-2 py-1 hover:bg-white/25">{copy.catalog}</a></li>
+        <li><a href="#contacto" class="block px-2 py-1 hover:bg-white/25">{copy.contact}</a></li>
+      </ul>
+
+      <div
+        class="flex items-center gap-0.5 border-l border-white/30 pl-2 text-[11px]"
+        role="group"
+        aria-label={copy.language}
+      >
+        {
+          languages.map((code, i) => (
+            <>
+              {i > 0 && <span aria-hidden="true" class="opacity-60">|</span>}
+              <a
+                href={routes[code]}
+                hreflang={code}
+                lang={code}
+                title={langLabels[code]}
+                data-lang={code}
+                aria-current={code === lang ? 'true' : undefined}
+                class:list={[
+                  'block px-1.5 py-1',
+                  code === lang
+                    ? 'bg-white/25 font-bold underline underline-offset-2'
+                    : 'hover:bg-white/25',
+                ]}
+              >
+                {code.toUpperCase()}
+              </a>
+            </>
+          ))
+        }
+      </div>
+    </div>
   </nav>
 </header>
+
+<script is:inline>
+  (function () {
+    try {
+      var links = document.querySelectorAll('[data-lang]');
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function () {
+          try {
+            window.localStorage.setItem('lang', this.getAttribute('data-lang') || '');
+          } catch (error) {
+            /* Si localStorage está bloqueado, el conmutador sigue funcionando. */
+          }
+        });
+      }
+    } catch (error) {
+      /* Sin JS, los enlaces ES | EN siguen siendo navegables. */
+    }
+  })();
+</script>

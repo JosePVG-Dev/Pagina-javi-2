@@ -1,10 +1,20 @@
+---
+import { t, type Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t[lang].contact;
+---
+
 <section id="contacto" class="px-6 py-6 md:px-10 md:py-8">
   <div class="xp-group mx-auto max-w-3xl text-center">
-    <h2 class="text-[26px] font-bold">¿Trabajamos juntos?</h2>
+    <h2 class="text-[26px] font-bold">{copy.heading}</h2>
     <p class="mx-auto mt-3 max-w-xl text-[12px] leading-relaxed text-[#4a4a4a]">
-      Cuéntame tu idea, el formato y la fecha de entrega. Te respondo con
-      presupuesto y disponibilidad en menos de 48 horas.
+      {copy.body}
     </p>
-    <a href="mailto:hola@javiera.art" class="button primary mt-8 inline-block">Escríbeme</a>
+    <a href="mailto:hola@javiera.art" class="button primary mt-8 inline-block">{copy.cta}</a>
   </div>
 </section>

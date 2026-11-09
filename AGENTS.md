@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Single-page Spanish-language portfolio for illustrator "Javiera". Astro 5 + Tailwind CSS 4, built as a static site. **No React** — the framework was removed; do not assume it is available.
+Bilingual (Spanish/English) single-page portfolio for illustrator "Javiera". Astro 5 + Tailwind CSS 4, built as a static site. **No React** — the framework was removed; do not assume it is available.
 
 ## Commands
 
@@ -13,11 +13,12 @@ There is no `npm run check` script, despite what `docs/plans/*` says. No test or
 
 ## Architecture
 
-- `src/pages/index.astro` is the **only route** and is now just a composition (~20 lines): `BaseLayout` + the six section components inside one dark wrapper.
-- `src/components/sections/` holds the page sections: `Nav`, `Hero`, `Precios`, `Catalogo`, `Contacto`, `Footer`. Markup lives there, not in the page.
-- `src/data/planes.ts` is the single source of content: `plans`, `photos`, `plansById`, `catalog`, all typed. Sections import from it — do not duplicate those arrays.
-- `src/layouts/BaseLayout.astro` owns `<head>`, metadata, Google Fonts (Pirata One), and imports `src/styles/global.css` globally. All pages must render through it.
-- The only client-side JavaScript is the pricing carousel: a vanilla `<script>` inside `Precios.astro` (Pointer Events for swipe). Astro inlines it into the HTML, so the build ships **no JS bundle**.
+- Two static routes, one page each: Spanish at `src/pages/index.astro` (`/`) and English at `src/pages/en/index.astro` (`/en/`). Both render the same shared body, `src/components/PageSections.astro`, inside `BaseLayout`. Do not duplicate section markup between routes.
+- `src/components/PageSections.astro` takes `lang` and composes `Nav`, `Hero`, `Precios`, `Catalogo`, `Contacto`, `Footer` inside the `xp-section` wrapper. Every section takes a `lang` prop.
+- `src/i18n/ui.ts` is the single source of copy: `locales`, the `Lang` type, `routes`, `langLabels`, the typed `t` dictionary (both languages complete by type), and the `fill()` template helper. All translatable strings live here.
+- `src/data/planes.ts` is the single source of plan/catalog structure: `planIds`/`PlanId`, `plans` (id + price), `photos`, `plansById`, `catalogIds`/`catalog`. Translatable names, tags, alts and catalog titles live in `src/i18n/ui.ts`, keyed by those ids — do not duplicate ids or prices.
+- `src/layouts/BaseLayout.astro` owns `<head>`, per-language `<title>`/description, `hreflang` alternates, Google Fonts (Pirata One), and imports `src/styles/global.css` globally. It sets `<html lang>` from the `lang` prop and emits the English auto-detect script only on `/`.
+- Client-side JavaScript is three inline scripts, so the build still ships **no JS bundle**: the pricing carousel (vanilla `<script>` in `Precios.astro`, Pointer Events for swipe), the `localStorage` language-choice hook in `Nav.astro`, and the browser-language redirect in `BaseLayout.astro` (`is:inline`, guarded by `try/catch`).
 - No React, no islands, no `client:*` directives. If you ever need one, re-add `@astrojs/react` and the React deps deliberately.
 - No CMS, backend, auth, or deploy/CI config. Git remote is GitHub; `dist/` is generated.
 
@@ -27,7 +28,7 @@ There is no `npm run check` script, despite what `docs/plans/*` says. No test or
 - Semantic CSS variables live in `global.css`. The XP palette (`--window-bg`, `--window-fg`, `--selection-bg`, `--desktop-bg`) is declared on `.xp-section` by the vendored theme, not in `global.css`.
 - `BaseLayout` still applies the light `--bg`/`--text` tokens to `<body>`, but the `xp-section` wrapper covers the whole page, so those are only visible if content is shorter than the viewport.
 - `:root[data-theme='dark']` is dead code left over from the removed theme toggle; the page does not switch themes.
-- **The whole page is Windows XP.** The wrapper in `index.astro` carries `xp-section`, which activates the vendored theme for the entire page. The nav is a `.top-panel` toolbar and the footer a `.bottom-panel` status bar. Sections are plain beige blocks; the content ones (Precios, Catálogo, Contacto) sit inside an `.xp-group` — the 1px etched frame XP dialogs used to group controls (`src/styles/xp/layout.css`). **Do not wrap sections in `.window`/`.title-bar`** (rejected as fake-window noise) and **do not separate them with colored bars** (also rejected); whitespace plus the group frame is the XP answer.
+- **The whole page is Windows XP.** The wrapper in `PageSections.astro` carries `xp-section`, which activates the vendored theme for the entire page. The nav is a `.top-panel` toolbar (with the `ES | EN` switcher) and the footer a `.bottom-panel` status bar. Sections are plain beige blocks; the content ones (Precios, Catálogo, Contacto) sit inside an `.xp-group` — the 1px etched frame XP dialogs used to group controls (`src/styles/xp/layout.css`). **Do not wrap sections in `.window`/`.title-bar`** (rejected as fake-window noise) and **do not separate them with colored bars** (also rejected); whitespace plus the group frame is the XP answer.
 - The old dark-theme tokens (`--tapshoe`, `--ashen*`, `--lagon`, `--button-bg`, `--button-text`, `--text-on-dark-*`, `--line-dark`, `--tint-ashen`, `--nav-bg-dark`) are **no longer referenced by any component**. They still exist in `global.css`; safe to delete, but do not reintroduce them in section markup.
 - `--media-gradient` **is** still used (catalog thumbnails and carousel placeholders) — keep it.
 

@@ -1,8 +1,13 @@
 ---
 import '../../styles/xp/wordart.css';
+import { t, type Lang } from '../../i18n/ui';
 
-// Texto provisional en estilo kawaii/y2k, como el de la página de referencia.
-const wordart = 'holiii!! soy yo :3 ^_^';
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = t[lang].hero;
 ---
 
 <section id="inicio" class="px-6 py-14 md:px-10 md:py-20">
@@ -11,23 +16,22 @@ const wordart = 'holiii!! soy yo :3 ^_^';
   >
     <div>
       <p class="text-[11px] uppercase tracking-[0.3em] text-[#4a4a4a]">
-        Ilustración · Diseño · Arte digital
+        {copy.eyebrow}
       </p>
-      <h1 class="mt-4 text-[42px] leading-none font-bold md:text-[64px]">Javiera</h1>
+      <h1 class="mt-4 text-[42px] leading-none font-bold md:text-[64px]">{copy.name}</h1>
       <p class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#3a3a3a]">
-        Ilustraciones con carácter, trazos afilados y una paleta que no pasa
-        desapercibida. Encargos abiertos para proyectos personales y marcas.
+        {copy.paragraph}
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#contacto" class="button primary">Encargar pieza</a>
-        <a href="#catalogo" class="button">Ver catálogo</a>
+        <a href="#contacto" class="button primary">{copy.primaryCta}</a>
+        <a href="#catalogo" class="button">{copy.secondaryCta}</a>
       </div>
     </div>
 
     <div class="wordart-wrap">
       <span class="wordart">
-        <span class="wordart__shade" aria-hidden="true">{wordart}</span>
-        <span class="wordart__text">{wordart}</span>
+        <span class="wordart__shade" aria-hidden="true">{copy.wordart}</span>
+        <span class="wordart__text">{copy.wordart}</span>
       </span>
     </div>
   </div>

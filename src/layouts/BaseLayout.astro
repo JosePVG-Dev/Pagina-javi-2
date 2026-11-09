@@ -1,24 +1,29 @@
 ---
 import '../styles/global.css';
+import { routes, t, type Lang } from '../i18n/ui';
 
 interface Props {
+  lang: Lang;
   title?: string;
   description?: string;
 }
 
-const {
-  title = 'Portfolio | Desarrollador Frontend',
-  description = 'Portfolio simple hecho con Astro, React y Tailwind.'
-} = Astro.props;
+const { lang, title, description } = Astro.props;
+const meta = t[lang].meta;
+const pageTitle = title ?? meta.title;
+const pageDescription = description ?? meta.description;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="alternate" hreflang="es" href={routes.es} />
+    <link rel="alternate" hreflang="en" href={routes.en} />
+    <link rel="alternate" hreflang="x-default" href={routes.es} />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -29,7 +34,41 @@ const {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap"
     />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
+    {
+      lang === 'es' && (
+        <script is:inline>
+          (function () {
+            try {
+              if (window.location.pathname !== '/') return;
+
+              var stored = null;
+              try {
+                stored = window.localStorage.getItem('lang');
+              } catch (error) {
+                stored = null;
+              }
+
+              /* Una elección manual manda: no se vuelve a preguntar. */
+              if (stored === 'es') return;
+              if (stored === 'en') {
+                window.location.replace('/en/');
+                return;
+              }
+
+              var primary =
+                (navigator.languages && navigator.languages[0]) || navigator.language || '';
+
+              if (String(primary).toLowerCase().indexOf('en') === 0) {
+                window.location.replace('/en/');
+              }
+            } catch (error) {
+              /* localStorage o navigator bloqueados: la página sigue en español. */
+            }
+          })();
+        </script>
+      )
+    }
   </head>
   <body class="bg-[var(--bg)] text-[var(--text)] antialiased">
     <slot />
