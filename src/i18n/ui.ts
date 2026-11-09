@@ -38,9 +38,7 @@ export interface Copy {
     language: string;
   };
   hero: {
-    eyebrow: string;
     name: string;
-    paragraph: string;
     primaryCta: string;
     secondaryCta: string;
     /** Rótulo WordArt (solo ASCII + emoticonos ASCII). */
@@ -94,10 +92,7 @@ export const t: Record<Lang, Copy> = {
       language: 'Idioma',
     },
     hero: {
-      eyebrow: 'Ilustración · Diseño · Arte digital',
       name: 'Javiera',
-      paragraph:
-        'Ilustraciones con carácter, trazos afilados y una paleta que no pasa desapercibida. Encargos abiertos para proyectos personales y marcas.',
       primaryCta: 'Encargar pieza',
       secondaryCta: 'Ver catálogo',
       wordart: 'holiii!! soy yo :3 ^_^',
@@ -160,10 +155,7 @@ export const t: Record<Lang, Copy> = {
       language: 'Language',
     },
     hero: {
-      eyebrow: 'Illustration · Design · Digital art',
       name: 'Javiera',
-      paragraph:
-        'Illustrations with personality, sharp linework and a palette that refuses to blend in. Open for commissions from individuals and brands.',
       primaryCta: 'Commission a piece',
       secondaryCta: 'View catalog',
       wordart: 'uh hi its me!! :D',

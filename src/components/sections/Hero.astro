@@ -1,6 +1,10 @@
----
+﻿---
 import '../../styles/xp/wordart.css';
+import '../../styles/xp/stamps.css';
 import { t, type Lang } from '../../i18n/ui';
+import pareja from '../../assets/stamps/pareja.gif';
+import evoluciones from '../../assets/stamps/evoluciones.gif';
+import rainbow from '../../assets/stamps/no-rain-no-rainbows.gif';
 
 interface Props {
   lang: Lang;
@@ -11,28 +15,50 @@ const copy = t[lang].hero;
 ---
 
 <section id="inicio" class="px-6 py-14 md:px-10 md:py-20">
-  <div
-    class="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.15fr_1fr] md:items-center md:gap-12"
-  >
-    <div>
-      <p class="text-[11px] uppercase tracking-[0.3em] text-[#4a4a4a]">
-        {copy.eyebrow}
-      </p>
-      <h1 class="mt-4 text-[42px] leading-none font-bold md:text-[64px]">{copy.name}</h1>
-      <p class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#3a3a3a]">
-        {copy.paragraph}
-      </p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#contacto" class="button primary">{copy.primaryCta}</a>
-        <a href="#catalogo" class="button">{copy.secondaryCta}</a>
-      </div>
-    </div>
+  <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
+    <!-- La marca sigue existiendo para lectores de pantalla y buscadores. -->
+    <h1 class="sr-only">{copy.name}</h1>
 
     <div class="wordart-wrap">
       <span class="wordart">
         <span class="wordart__shade" aria-hidden="true">{copy.wordart}</span>
         <span class="wordart__text">{copy.wordart}</span>
       </span>
+    </div>
+
+    <div class="mt-10 flex flex-wrap justify-center gap-3">
+      <a href="#contacto" class="button primary">{copy.primaryCta}</a>
+      <a href="#catalogo" class="button">{copy.secondaryCta}</a>
+    </div>
+
+    <div class="stamps mt-12" aria-hidden="true">
+      <img
+        src={pareja.src}
+        alt=""
+        width="193"
+        height="127"
+        class="stamp--pareja"
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        src={evoluciones.src}
+        alt=""
+        width="279"
+        height="39"
+        class="stamp--evoluciones"
+        loading="eager"
+        decoding="async"
+      />
+      <img
+        src={rainbow.src}
+        alt=""
+        width="150"
+        height="20"
+        class="stamp--rainbow"
+        loading="eager"
+        decoding="async"
+      />
     </div>
   </div>
 </section>

@@ -1,0 +1,29 @@
+﻿/* Stamps: GIFs pixel-art de la web de referencia. Son decorativos, asÃ­ que se
+   sirven tal cual (sin pasar por astro:assets, que aplanarÃ­a la animaciÃ³n) y
+   se escalan con `pixelated` para que no se emborronen. */
+
+.stamps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1rem 2rem;
+}
+
+.stamps img {
+  display: block;
+  max-width: 100%;
+  image-rendering: pixelated;
+}
+
+.stamps .stamp--pareja {
+  transform: rotate(-5deg);
+}
+
+.stamps .stamp--evoluciones {
+  transform: rotate(-2deg);
+}
+
+.stamps .stamp--rainbow {
+  transform: rotate(3deg);
+}

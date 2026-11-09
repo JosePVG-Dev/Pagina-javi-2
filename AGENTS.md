@@ -43,6 +43,7 @@ There is no `npm run check` script, despite what `docs/plans/*` says. No test or
 ## Assets / gotchas
 
 - Carousel artwork lives in `src/assets/carousel/` (`chibi.webp`, `full.png`, `render.jpg`) and is imported by `src/data/planes.ts` as `ImageMetadata`. `Precios.astro` renders it with Astro's `<Image>` (`astro:assets`), which emits WebP + srcset at build time — do not replace it with a plain `<img>` or a `public/` path.
+- Hero stamps live in `src/assets/stamps/` (animated GIFs). They are imported in `Hero.astro` but rendered with a plain `<img src={stamp.src}>`: Astro imports any image as `ImageMetadata` (so `.src` is required) and `<Image>` would flatten the animation. `image-rendering: pixelated` and the `width`/`height` attributes keep them crisp and prevent layout shift.
 - The carousel frame has a fixed height (`420px`, `560px` from `md`) and uses `object-fit: contain`, because the artworks have mixed aspect ratios and `cover` crops the portraits. Keep the viewport's `padding` at `0`: with padding, `overflow: hidden` clips at the padding box and the next slide bleeds into the gap.
 - `public/background.PNG` is ~14 MB and referenced nowhere. It is copied into `dist/` on every build; prefer optimized formats/sizes or remove it.
 - Anything in `public/` is served from `/`; static imports belong in `src/`.
