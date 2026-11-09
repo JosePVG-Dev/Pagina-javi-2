@@ -1,0 +1,213 @@
+---
+import { Image } from 'astro:assets';
+import '../../styles/xp/theme.css';
+import '../../styles/xp/precios.css';
+import { plans, photos, plansById } from '../../data/planes';
+---
+
+<section id="precios" class="px-6 py-6 md:px-10 md:py-8">
+  <div class="xp-group mx-auto max-w-6xl">
+    <header class="max-w-2xl">
+      <h2 class="text-[26px] leading-tight font-bold">Tarifas claras</h2>
+      <p class="mt-2 text-[12px] leading-relaxed text-[#4a4a4a]">
+        Precios de referencia en dólares. Cada proyecto se cotiza según
+        complejidad, formato y uso final.
+      </p>
+    </header>
+
+    <hr class="my-6" />
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-[2fr_3fr] md:items-start" data-pricing>
+      <!-- 40%: precios -->
+      <div>
+        <ul class="list price-list">
+          {
+            plans.map((plan, i) => (
+              <li>
+                <button
+                  type="button"
+                  class="price-row"
+                  data-price-row={i}
+                  aria-controls="precios-carrusel"
+                  aria-current={i === 0 ? 'true' : 'false'}
+                >
+                  <span>
+                    <span class="price-row-name" data-plan-name>{plan.name}</span>
+                    <span class="price-row-tag">{plan.tag}</span>
+                  </span>
+                  <span class="price-row-amount">
+                    <span>$</span>{plan.price}
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+
+        <a
+          href="#contacto"
+          class="button mt-4 block w-full text-[11px] tracking-[0.12em] uppercase"
+          data-cta
+        >
+          Elegir plan {plans[0].name}
+        </a>
+      </div>
+
+      <!-- 60%: carrusel -->
+      <div
+        id="precios-carrusel"
+        role="region"
+        aria-roledescription="carrusel"
+        aria-label="Ejemplos por plan"
+        data-carousel
+      >
+        <div class="carousel-viewport" data-viewport>
+          <div class="carousel-track" data-track>
+            {
+              photos.map((photo, i) => (
+                <figure
+                  class="carousel-slide"
+                  data-slide={i}
+                  role="group"
+                  aria-roledescription="diapositiva"
+                  aria-label={`${i + 1} de ${photos.length}`}
+                  aria-hidden={i === 0 ? 'false' : 'true'}
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    widths={[600, 1200]}
+                    sizes="(min-width: 768px) 600px, 90vw"
+                    format="webp"
+                    quality={82}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    draggable="false"
+                  />
+                </figure>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="mt-3 flex items-center justify-between gap-4">
+          <div class="flex items-center">
+            {
+              photos.map((photo, i) => (
+                <button
+                  type="button"
+                  class="carousel-dot"
+                  data-dot={i}
+                  aria-label={`Ver ${plansById.get(photo.id)?.name ?? `foto ${i + 1}`}`}
+                  aria-current={i === 0 ? 'true' : 'false'}
+                />
+              ))
+            }
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="button carousel-arrow carousel-arrow--prev"
+              data-prev
+              aria-label="Foto anterior"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              class="button carousel-arrow carousel-arrow--next"
+              data-next
+              aria-label="Foto siguiente"
+            >
+              →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pricing]');
+
+  if (root) {
+    const track = root.querySelector<HTMLElement>('[data-track]');
+    const viewport = root.querySelector<HTMLElement>('[data-viewport]');
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-price-row]'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-dot]'));
+    const cta = root.querySelector<HTMLElement>('[data-cta]');
+    const names = rows.map(
+      (row) => row.querySelector('[data-plan-name]')?.textContent?.trim() ?? ''
+    );
+    const total = slides.length;
+    let index = 0;
+    let startX = 0;
+    let dragging = false;
+    let dx = 0;
+
+    const goTo = (next: number) => {
+      index = (next + total) % total;
+
+      if (track) track.style.transform = `translateX(-${index * 100}%)`;
+
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.setAttribute('aria-hidden', String(!active));
+        slide.toggleAttribute('inert', !active);
+      });
+
+      rows.forEach((row, i) => row.setAttribute('aria-current', String(i === index)));
+      dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
+
+      if (cta && names[index]) cta.textContent = `Elegir plan ${names[index]}`;
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => goTo(index - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => goTo(index + 1));
+
+    viewport?.addEventListener('pointerdown', (event) => {
+      if (event.target instanceof Element && event.target.closest('button')) return;
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+      startX = event.clientX;
+      dx = 0;
+      dragging = true;
+      viewport.setPointerCapture(event.pointerId);
+      if (track) track.style.transition = 'none';
+    });
+
+    viewport?.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      dx = event.clientX - startX;
+      if (track) {
+        track.style.transform = `translateX(calc(-${index * 100}% + ${dx}px))`;
+      }
+    });
+
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      if (track) track.style.transition = '';
+
+      if (Math.abs(dx) > 40) goTo(index + (dx < 0 ? 1 : -1));
+      else goTo(index);
+      dx = 0;
+    };
+
+    viewport?.addEventListener('pointerup', endDrag);
+    viewport?.addEventListener('pointercancel', endDrag);
+
+    rows.forEach((row, i) => row.addEventListener('click', () => goTo(i)));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') goTo(index - 1);
+      if (event.key === 'ArrowRight') goTo(index + 1);
+    });
+
+    goTo(0);
+  }
+</script>

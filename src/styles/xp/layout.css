@@ -1,0 +1,14 @@
+/* Paneles de contenido estilo "property sheet" de XP: marco grabado de 1px,
+   mismo beige, sin relleno propio. Es la forma en que los diálogos de XP
+   agrupaban bloques de contenido (group box), en lugar de barras de color. */
+.xp-group {
+  border: 1px solid #d0d0bf;
+  border-radius: 3px;
+  padding: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .xp-group {
+    padding: 2rem 2.25rem;
+  }
+}

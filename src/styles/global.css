@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Pirata One", "Segoe UI", sans-serif;
+}
+
 :root {
   --bg: #f3f6f9;
   --surface: #ffffff;
@@ -7,8 +11,27 @@
   --muted: #5a6777;
   --line: #d8e0e8;
   --accent: #0c7dff;
+  --ashen: #636d79;
+  --ashen-light: #9aa5b2;
+  --tapshoe: #302f33;
+  --lagon: #6fa5c9;
   --nav-base: #4efc05;
   --nav-text: #e101fe;
+  --button-bg: var(--lagon);
+  --button-text: #10161c;
+  --text-on-dark: #e7eaef;
+  --text-on-dark-soft: rgba(231, 234, 239, 0.72);
+  --text-on-dark-muted: rgba(231, 234, 239, 0.65);
+  --text-on-dark-faint: rgba(231, 234, 239, 0.6);
+  --line-dark: rgba(99, 109, 121, 0.35);
+  --line-dark-strong: rgba(99, 109, 121, 0.6);
+  --nav-bg-dark: rgba(48, 47, 51, 0.85);
+  --tint-ashen: rgba(99, 109, 121, 0.12);
+  --media-gradient: linear-gradient(
+    160deg,
+    rgba(99, 109, 121, 0.75),
+    rgba(48, 47, 51, 0.95)
+  );
 }
 
 :root[data-theme='dark'] {
@@ -20,11 +43,22 @@
   --accent: #2e9bff;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   margin: 0;
   min-height: 100%;
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  font-family: "Pirata One", "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 a {
