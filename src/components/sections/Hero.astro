@@ -1,6 +1,7 @@
 ﻿---
 import '../../styles/xp/wordart.css';
 import '../../styles/xp/stamps.css';
+import '../../styles/xp/hero.css';
 import { t, type Lang } from '../../i18n/ui';
 import pareja from '../../assets/stamps/pareja.gif';
 import evoluciones from '../../assets/stamps/evoluciones.gif';
@@ -24,11 +25,6 @@ const copy = t[lang].hero;
         <span class="wordart__shade" aria-hidden="true">{copy.wordart}</span>
         <span class="wordart__text">{copy.wordart}</span>
       </span>
-    </div>
-
-    <div class="mt-10 flex flex-wrap justify-center gap-3">
-      <a href="#contacto" class="button primary">{copy.primaryCta}</a>
-      <a href="#catalogo" class="button">{copy.secondaryCta}</a>
     </div>
 
     <div class="stamps mt-12" aria-hidden="true">
@@ -59,6 +55,11 @@ const copy = t[lang].hero;
         loading="eager"
         decoding="async"
       />
+    </div>
+
+    <div class="hero-actions mt-20">
+      <a href="#contacto" class="button primary">{copy.primaryCta}</a>
+      <a href="#catalogo" class="button">{copy.secondaryCta}</a>
     </div>
   </div>
 </section>

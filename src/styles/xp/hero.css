@@ -1,0 +1,48 @@
+/* Botones del hero. Van sin capa y con `#inicio` delante para poder ganarle a
+   las reglas base de `.button` que trae el tema XP (sin @layer, mayor
+   especificidad). El primario usa el azul Luna de la barra de tareas, que es
+   el único color saturado que ya existe en la página. */
+
+#inicio .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+#inicio .hero-actions .button {
+  flex: 1 1 200px;
+  max-width: 280px;
+  padding: 14px 26px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+#inicio .hero-actions .button.primary {
+  background: linear-gradient(180deg, #7db8ff 0%, #3d95ff 45%, #0b62d8 55%, #0046c8 100%);
+  border-color: #003c74;
+  color: #ffffff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+    inset -1px -2px 1px rgba(0, 0, 0, 0.22),
+    1px 1px 0 #c9c4b8;
+}
+
+#inicio .hero-actions .button.primary:hover {
+  background: linear-gradient(180deg, #93c6ff 0%, #52a4ff 45%, #1a72e8 55%, #0a53d6 100%);
+}
+
+#inicio .hero-actions .button.primary:active {
+  background: linear-gradient(180deg, #0046c8 0%, #0b62d8 55%, #3d95ff 100%);
+}
+
+@media (max-width: 420px) {
+  #inicio .hero-actions .button {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
