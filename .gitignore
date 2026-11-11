@@ -18,6 +18,9 @@ dev.log
 .env
 .env.production
 
+# brainstorming mockups
+.superpowers/
+
 # macOS-specific files
 .DS_Store
 
