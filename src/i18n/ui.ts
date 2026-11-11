@@ -86,7 +86,25 @@ export interface Copy {
   contact: {
     heading: string;
     body: string;
-    cta: string;
+    /** Asunto del correo. `{plan}` se sustituye por el plan elegido. */
+    mail: {
+      subject: string;
+    };
+    /** Formulario que arma el correo antes de enviarlo. */
+    form: {
+      legend: string;
+      plan: string;
+      discord: string;
+      discordHint: string;
+      references: string;
+      referencesHint: string;
+      files: string;
+      filesHint: string;
+      submit: string;
+      ready: string;
+      /** Plantilla con {n}. */
+      attach: string;
+    };
   };
   footer: {
     tagline: string;
@@ -149,7 +167,22 @@ export const t: Record<Lang, Copy> = {
     contact: {
       heading: '¿Trabajamos juntos?',
       body: 'Cuéntame tu idea, el formato y la fecha de entrega. Te respondo con presupuesto y disponibilidad en menos de 48 horas.',
-      cta: 'Escríbeme',
+      mail: {
+        subject: 'Comisión — {plan}',
+      },
+      form: {
+        legend: 'Brief',
+        plan: 'Plan',
+        discord: 'Discord',
+        discordHint: 'opcional — si prefieres que te escriba por ahí',
+        references: 'Referencias',
+        referencesHint: 'Enlaces a Toyhouse, Drive o Imgur',
+        files: 'Imágenes de referencia',
+        filesHint: 'Se adjuntan a mano en el correo',
+        submit: 'Preparar correo',
+        ready: 'Se abrió tu correo con todo escrito.',
+        attach: 'Recuerda adjuntar {n} archivo(s) antes de enviar.',
+      },
     },
     footer: {
       tagline: 'Ilustración · Diseño · Arte digital',
@@ -271,7 +304,22 @@ export const t: Record<Lang, Copy> = {
     contact: {
       heading: "Let's work together?",
       body: "Tell me your idea, the format and the deadline. I'll reply with a quote and availability within 48 hours.",
-      cta: 'Email me',
+      mail: {
+        subject: 'Commission — {plan}',
+      },
+      form: {
+        legend: 'Brief',
+        plan: 'Plan',
+        discord: 'Discord',
+        discordHint: 'optional — if you would rather be reached there',
+        references: 'References',
+        referencesHint: 'Links to Toyhouse, Drive or Imgur',
+        files: 'Reference images',
+        filesHint: 'Attach them by hand in the email',
+        submit: 'Compose email',
+        ready: 'Your email opened with everything written.',
+        attach: 'Remember to attach {n} file(s) before sending.',
+      },
     },
     footer: {
       tagline: 'Illustration · Design · Digital art',

@@ -1,5 +1,7 @@
 ---
+import { entryPrice, featuredPlanIndex, plans } from '../../data/planes';
 import { t, type Lang } from '../../i18n/ui';
+import '../../styles/xp/contacto.css';
 
 interface Props {
   lang: Lang;
@@ -7,6 +9,18 @@ interface Props {
 
 const { lang } = Astro.props;
 const copy = t[lang].contact;
+const pricing = t[lang].pricing;
+const plansCopy = t[lang].plans;
+
+const email = 'horseland212002@gmail.com';
+
+// Opciones del plan: los mismos peldaños de la lista de precios.
+const planOptions = [
+  `${pricing.entry.name} — $${entryPrice}`,
+  ...plans.map((plan) => `${plansCopy[plan.id].name} — $${plan.price}`),
+  `${pricing.custom.name} — ${pricing.custom.amount}`,
+];
+const defaultPlan = planOptions[featuredPlanIndex + 1] ?? planOptions[0];
 ---
 
 <section id="contacto" class="px-6 py-6 md:px-10 md:py-8">
@@ -15,6 +29,96 @@ const copy = t[lang].contact;
     <p class="mx-auto mt-3 max-w-xl text-[12px] leading-relaxed text-[#4a4a4a]">
       {copy.body}
     </p>
-    <a href="mailto:hola@javiera.art" class="button primary mt-8 inline-block">{copy.cta}</a>
+
+    <form
+      class="brief-form"
+      data-brief-form
+      data-mail-to={email}
+      data-mail-subject={copy.mail.subject}
+      data-ready={copy.form.ready}
+      data-attach={copy.form.attach}
+    >
+      <p class="brief-legend">{copy.form.legend}</p>
+
+      <div class="brief-grid">
+        <label class="brief-field">
+          <span class="brief-label">{copy.form.plan}</span>
+          <select name="plan">
+            {planOptions.map((option) => (
+              <option value={option} selected={option === defaultPlan}>{option}</option>
+            ))}
+          </select>
+        </label>
+
+        <label class="brief-field">
+          <span class="brief-label">{copy.form.discord}</span>
+          <input type="text" name="discord" autocomplete="off" placeholder="user" />
+          <span class="brief-hint">{copy.form.discordHint}</span>
+        </label>
+
+        <label class="brief-field brief-field--full">
+          <span class="brief-label">{copy.form.references}</span>
+          <textarea name="referencias" rows="3" spellcheck="false" />
+          <span class="brief-hint">{copy.form.referencesHint}</span>
+        </label>
+
+        <label class="brief-field brief-field--full">
+          <span class="brief-label">{copy.form.files}</span>
+          <input type="file" name="archivos" accept="image/*" multiple />
+          <span class="brief-hint">{copy.form.filesHint}</span>
+        </label>
+      </div>
+
+      <button type="submit" class="button brief-submit">{copy.form.submit}</button>
+      <p class="brief-status" data-brief-status aria-live="polite"></p>
+    </form>
   </div>
 </section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-brief-form]');
+  const status = document.querySelector<HTMLElement>('[data-brief-status]');
+  const select = form?.querySelector<HTMLSelectElement>('select[name="plan"]');
+
+  const to = form?.dataset.mailTo;
+  const subject = form?.dataset.mailSubject ?? '';
+
+  // El plan elegido en Precios llega por evento y se refleja en el desplegable.
+  window.addEventListener('javi:plan', (event) => {
+    const plan = (event as CustomEvent<{ label?: string }>).detail?.label;
+    if (!plan || !select) return;
+
+    if ([...select.options].some((option) => option.value === plan)) select.value = plan;
+  });
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!to) return;
+
+    const data = new FormData(form);
+    const read = (key: string) => String(data.get(key) ?? '').trim();
+
+    const plan = read('plan') || '—';
+    const files = form.querySelector<HTMLInputElement>('input[type="file"]')?.files;
+    const count = files?.length ?? 0;
+
+    const lines = [
+      `Plan: ${plan}`,
+      read('discord') && `Discord: ${read('discord')}`,
+      read('referencias') && `Referencias:\n${read('referencias')}`,
+      count > 0 && `Adjunto ${count} archivo(s) de referencia.`,
+    ].filter(Boolean) as string[];
+
+    window.location.href = `mailto:${to}?subject=${encodeURIComponent(
+      subject.split('{plan}').join(plan)
+    )}&body=${encodeURIComponent(lines.join('\n'))}`;
+
+    if (status) {
+      const attach = form.dataset.attach ?? '{n}';
+      status.textContent =
+        count > 0
+          ? `${form.dataset.ready ?? ''} ${attach.split('{n}').join(String(count))}`.trim()
+          : (form.dataset.ready ?? '');
+    }
+  });
+</script>

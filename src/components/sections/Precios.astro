@@ -51,6 +51,7 @@ const slideNames: Record<string, string> = {
               type="button"
               class="price-row price-row--entry"
               data-price-row={0}
+              data-plan-price={entryPrice}
               aria-controls="precios-carrusel"
               aria-current={featuredSlideIndex === 0 ? 'true' : 'false'}
             >
@@ -71,6 +72,7 @@ const slideNames: Record<string, string> = {
                   type="button"
                   class="price-row"
                   data-price-row={i + 1}
+                  data-plan-price={plan.price}
                   aria-controls="precios-carrusel"
                   aria-current={i + 1 === featuredSlideIndex ? 'true' : 'false'}
                 >
@@ -275,6 +277,18 @@ const slideNames: Record<string, string> = {
       dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
 
       if (cta && names[index]) cta.textContent = ctaTemplate.replace('{name}', names[index]);
+
+      // El correo de Contacto se reescribe con el plan que está a la vista.
+      const price = rows[index]?.dataset.planPrice;
+      const label = names[index];
+
+      if (label) {
+        window.dispatchEvent(
+          new CustomEvent('javi:plan', {
+            detail: { label: price ? `${label} — $${price}` : label },
+          })
+        );
+      }
     };
 
     root.querySelector('[data-prev]')?.addEventListener('click', () => {
