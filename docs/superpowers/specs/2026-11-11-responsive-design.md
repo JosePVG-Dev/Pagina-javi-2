@@ -77,7 +77,7 @@ Con `px-4` + `p-3`, a 320 px quedan **264 px** de contenido. Es el mínimo que n
 - Enlaces de sección de la nav: 40 px de alto en móvil, 32 px desde `md`.
 - Botones `.button` por debajo de `lg`: `min-height: 40px`, `display: inline-flex`, centrado vertical y horizontal. Incluye CTA del hero, CTA del catálogo, flechas y pausa del carrusel, CTA de precios y submit del formulario.
 - Submit del formulario: 44 px de alto en móvil y ancho completo; desde `sm`, ancho automático.
-- Inputs de texto, email, `select` y `textarea`: **16 px** por debajo de `lg` para evitar el zoom de iOS/iPadOS; **12 px** desde `lg`. No se cambia el resto del estilo XP del control.
+- Inputs de texto, email, `select` y `textarea`: **16 px** por debajo de `lg` para evitar el zoom de iOS/iPadOS; **11 px** desde `lg` (el tamaño actual). No se cambia el resto del estilo XP del control.
 - El input de archivo se queda en 12 px con padding vertical; no dispara zoom de teclado.
 
 ### Lo que no cambia
@@ -166,7 +166,7 @@ Así caben en dos filas a 320 px en lugar de tres, y a 768 px vuelven a su tama�
 - Sección y grupo con los paddings globales.
 - Encabezado: `text-[22px] md:text-[26px]`; cuerpo a 12 px.
 - Formulario a una columna hasta `sm`; dos columnas desde `sm` (ya existe).
-- Inputs a 16 px por debajo de `lg`; 12 px desde `lg`.
+- Inputs a 16 px por debajo de `lg`; 11 px desde `lg`.
 - Submit: `w-full sm:w-auto`, 44 px de alto mínimo en móvil.
 - Status y hints conservan sus tamaños (10–11 px).
 
@@ -211,7 +211,7 @@ No se tocan `theme.css`, `planes.ts`, `ui.ts`, `BaseLayout.astro` ni el JS de lo
 ## 13. Riesgos y decisiones conscientes
 
 - **La barra de dos filas come alto.** Es la opción elegida; se compensa con menos padding en el hero y con `scroll-margin-top`.
-- **Inputs a 16 px en tablet.** Se prioriza que iOS no haga zoom sobre el look compacto de 11 px. En escritorio se mantiene 12 px.
+- **Inputs a 16 px en tablet.** Se prioriza que iOS no haga zoom sobre el look compacto de 11 px. En escritorio se mantienen los 11 px actuales.
 - **Precios apilados en tablet.** Alarga la página, pero evita el carrusel estrecho y alto de 360 × 560 px.
 - **Stamps escalados.** Los GIF pixel-art pueden perder algo de detalle al reducirlos; se mantiene `image-rendering: pixelated`.
 - **`overflow-x: clip`.** Si algo necesitara sangrar a propósito, quedaría cortado; no es el caso hoy.
