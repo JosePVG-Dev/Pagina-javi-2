@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { catalog } from '../../data/planes';
 import { t, type Lang } from '../../i18n/ui';
 
@@ -20,18 +21,24 @@ const items = t[lang].catalogItems;
 
     <hr class="my-5" />
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
       {
-        catalog.map((id) => (
+        catalog.map((item, i) => (
           <article class="raised p-2">
-            <div
-              class="aspect-[4/3] w-full border border-[#7f9db9] [background-image:var(--media-gradient)]"
-              aria-hidden="true"
-            />
-            <div class="mt-2 flex items-baseline justify-between gap-3 px-1 pb-1">
-              <h3 class="text-[12px] font-bold">{items[id].title}</h3>
-              <span class="text-[10px] uppercase tracking-[0.15em] text-[#4a4a4a]">{items[id].type}</span>
+            <div class="aspect-[4/3] w-full overflow-hidden border border-[#7f9db9] bg-[#f7f5ec]">
+              <Image
+                src={item.src}
+                alt={items[item.id].alt}
+                widths={[220, 440]}
+                sizes="(min-width: 1024px) 210px, 45vw"
+                format="webp"
+                quality={80}
+                loading={i < 5 ? 'eager' : 'lazy'}
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
             </div>
+            <p class="mt-2 px-1 pb-1 text-[10px] uppercase tracking-[0.15em] text-[#4a4a4a]">{items[item.id].type}</p>
           </article>
         ))
       }

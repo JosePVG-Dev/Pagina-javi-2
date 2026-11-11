@@ -69,6 +69,43 @@
   vertical-align: top;
 }
 
+/* ---------- puerta de entrada ---------- */
+
+/* Primer renglón de la lista: mismo sitio que los demás precios, pero con el
+   fondo apagado para que se lea como puerta y no como un peldaño más. */
+#precios .price-row--entry {
+  background: #f7f5ec;
+}
+
+#precios .price-badge--quiet {
+  background: #dcd9ca;
+  color: #3a3a30;
+}
+
+#precios .price-row[href] {
+  text-decoration: none;
+}
+
+/* ---------- plan a cotizar ---------- */
+
+/* Cierra la lista: borde punteado en vez de cifra. */
+#precios .price-row--custom {
+  border-top: 1px dashed #a9a792;
+  background: #f7f5ec;
+}
+
+#precios .price-row-amount--text {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#precios .price-addons {
+  margin-top: 12px;
+  color: #6b6b5e;
+  font-size: 10px;
+}
+
 /* ---------- carrusel ---------- */
 
 #precios .carousel-viewport {
@@ -111,6 +148,45 @@
   -webkit-user-drag: none;
 }
 
+/* ---------- indicador de avance ---------- */
+
+/* Línea continua pegada al borde inferior de la foto. Marca lo que falta
+   para el próximo cambio sin añadir altura ni bloques. */
+#precios .carousel-edge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  height: 3px;
+  background: rgba(11, 18, 32, 0.45);
+  pointer-events: none;
+}
+
+#precios .carousel-edge b {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #2f6fd0 0%, #63a6ff 100%);
+  box-shadow: 0 -1px 4px rgba(99, 166, 255, 0.55);
+  animation: carousel-edge 3000ms linear forwards;
+}
+
+@keyframes carousel-edge {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Pausado, detenido o desactivado: la línea se queda quieta o desaparece. */
+#precios .carousel-edge[data-idle],
+#precios [data-autoplay-off] .carousel-edge {
+  visibility: hidden;
+}
+
 #precios .carousel-arrow {
   width: 36px;
   height: 28px;
@@ -122,6 +198,18 @@
 }
 
 #precios .carousel-arrow::after {
+  display: none;
+}
+
+#precios .carousel-toggle {
+  width: 36px;
+  font-family: Tahoma, 'Segoe UI Symbol', 'Apple Symbols', Verdana, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+/* Sin movimiento reducido no hay animación que pausar. */
+#precios [data-autoplay-off] .carousel-toggle {
   display: none;
 }
 

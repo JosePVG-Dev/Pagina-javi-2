@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Bilingual (Spanish/English) single-page portfolio for illustrator "Javiera". Astro 5 + Tailwind CSS 4, built as a static site. **No React** — the framework was removed; do not assume it is available.
+Bilingual (Spanish/English) single-page portfolio for illustrator "Bloomysrkj". Astro 5 + Tailwind CSS 4, built as a static site. **No React** — the framework was removed; do not assume it is available.
 
 ## Commands
 
@@ -11,6 +11,12 @@ Bilingual (Spanish/English) single-page portfolio for illustrator "Javiera". Ast
 
 There is no `npm run check` script, despite what `docs/plans/*` says. No test or lint tooling is configured.
 
+## Validation scope
+
+**Do not verify UI changes unless the user asks.** Apply the edit and stop: no `astro check`, no `npm run build`, no browser walk-through, no screenshots, no re-reading the rendered page. The user says what to change and reviews it themselves on the hot-reloaded dev server.
+
+`astro check` is still fine when you changed a type contract (`planes.ts`, `ui.ts`) and are genuinely unsure it compiles — that is catching your own mistake, not a UI review. A real browser pass happens only when the user says `verifica`, `revisa`, `míralo`, or asks for a screenshot.
+
 ## Architecture
 
 - Two static routes, one page each: Spanish at `src/pages/index.astro` (`/`) and English at `src/pages/en/index.astro` (`/en/`). Both render the same shared body, `src/components/PageSections.astro`, inside `BaseLayout`. Do not duplicate section markup between routes.
@@ -18,7 +24,7 @@ There is no `npm run check` script, despite what `docs/plans/*` says. No test or
 - `src/i18n/ui.ts` is the single source of copy: `locales`, the `Lang` type, `routes`, `langLabels`, the typed `t` dictionary (both languages complete by type), and the `fill()` template helper. All translatable strings live here.
 - `src/data/planes.ts` is the single source of plan/catalog structure: `planIds`/`PlanId`, `plans` (id + price), `photos`, `plansById`, `catalogIds`/`catalog`. Translatable names, tags, alts and catalog titles live in `src/i18n/ui.ts`, keyed by those ids — do not duplicate ids or prices.
 - `src/layouts/BaseLayout.astro` owns `<head>`, per-language `<title>`/description, `hreflang` alternates, Google Fonts (Pirata One), and imports `src/styles/global.css` globally. It sets `<html lang>` from the `lang` prop and emits the English auto-detect script only on `/`.
-- Client-side JavaScript is three inline scripts, so the build still ships **no JS bundle**: the pricing carousel (vanilla `<script>` in `Precios.astro`, Pointer Events for swipe), the `localStorage` language-choice hook in `Nav.astro`, and the browser-language redirect in `BaseLayout.astro` (`is:inline`, guarded by `try/catch`).
+- Client-side JavaScript is three inline scripts, so the build still ships **no JS bundle**: the pricing carousel (vanilla `<script>` in `Precios.astro`, Pointer Events for swipe, plus a 3 s autoplay that pauses on hover/focus/off-screen, stops for good on any manual navigation and can be switched off with `localStorage` key `javi:carousel-autoplay`), the `localStorage` language-choice hook in `Nav.astro`, and the browser-language redirect in `BaseLayout.astro` (`is:inline`, guarded by `try/catch`).
 - No React, no islands, no `client:*` directives. If you ever need one, re-add `@astrojs/react` and the React deps deliberately.
 - No CMS, backend, auth, or deploy/CI config. Git remote is GitHub; `dist/` is generated.
 
