@@ -264,6 +264,17 @@
   }
 }
 
+/* En móvil y tablet el renglón es zona de toque: más alto y nombre legible. */
+@media (max-width: 1023px) {
+  #precios .price-row {
+    min-height: 44px;
+  }
+
+  #precios .price-row-name {
+    font-size: 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   #precios .carousel-track {
     transition: none;
