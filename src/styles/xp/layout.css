@@ -4,10 +4,43 @@
 .xp-group {
   border: 1px solid #d0d0bf;
   border-radius: 3px;
-  padding: 1.25rem;
+  padding: 0.75rem;
+}
+
+/* La barra superior es sticky: los anclajes necesitan hueco para no quedar
+   debajo. En móvil la barra tiene dos filas (~91 px); en escritorio, una. */
+#inicio,
+#precios,
+#catalogo,
+#contacto {
+  scroll-margin-top: 96px;
+}
+
+/* Evita scroll horizontal por el WordArt rotado o los stamps, sin crear un
+   contenedor de scroll (sticky sigue funcionando). */
+.xp-section {
+  overflow-x: clip;
+}
+
+/* El tema XP deja los botones muy bajos para dedo. */
+@media (max-width: 1023px) {
+  .xp-section a.button,
+  .xp-section button.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+  }
 }
 
 @media (min-width: 768px) {
+  #inicio,
+  #precios,
+  #catalogo,
+  #contacto {
+    scroll-margin-top: 56px;
+  }
+
   .xp-group {
     padding: 2rem 2.25rem;
   }
