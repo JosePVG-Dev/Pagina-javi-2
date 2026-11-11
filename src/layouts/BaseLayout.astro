@@ -6,9 +6,11 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
+  /** Rutas equivalentes de la misma página en cada idioma, para hreflang. */
+  alternates?: Record<Lang, string>;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, alternates = routes } = Astro.props;
 const meta = t[lang].meta;
 const pageTitle = title ?? meta.title;
 const pageDescription = description ?? meta.description;
@@ -21,9 +23,9 @@ const pageDescription = description ?? meta.description;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={pageDescription} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="alternate" hreflang="es" href={routes.es} />
-    <link rel="alternate" hreflang="en" href={routes.en} />
-    <link rel="alternate" hreflang="x-default" href={routes.es} />
+    <link rel="alternate" hreflang="es" href={alternates.es} />
+    <link rel="alternate" hreflang="en" href={alternates.en} />
+    <link rel="alternate" hreflang="x-default" href={alternates.es} />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

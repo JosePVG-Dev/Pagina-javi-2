@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TosBody from '../components/TosBody.astro';
+import { t, tosRoutes } from '../i18n/ui';
+
+const copy = t.es.tos;
+---
+
+<BaseLayout
+  lang="es"
+  title={copy.meta.title}
+  description={copy.meta.description}
+  alternates={tosRoutes}
+>
+  <TosBody lang="es" />
+</BaseLayout>

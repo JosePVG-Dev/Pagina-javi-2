@@ -1,19 +1,23 @@
 ---
-import { langLabels, routes, t, type Lang } from '../../i18n/ui';
+import { langLabels, routes, tosRoutes, t, type Lang } from '../../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Página actual: cambia los destinos del conmutador y de los anclajes. */
+  page?: 'home' | 'tos';
 }
 
-const { lang } = Astro.props;
+const { lang, page = 'home' } = Astro.props;
 const copy = t[lang].nav;
 const languages: Lang[] = ['es', 'en'];
+const pageRoutes = page === 'tos' ? tosRoutes : routes;
+const home = routes[lang];
 ---
 
 <header class="top-panel sticky top-0 z-20">
   <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 px-4 py-1.5 md:gap-x-2">
     <a
-      href="#inicio"
+      href={home}
       class="order-1 flex min-h-9 items-center text-[12px] font-bold uppercase tracking-[0.25em] md:min-h-8"
     >
       Bloomysrkj
@@ -23,18 +27,39 @@ const languages: Lang[] = ['es', 'en'];
       class="order-3 flex w-full items-center justify-between gap-1 border-t border-white/25 pt-0.5 text-[11px] md:order-2 md:ml-auto md:w-auto md:justify-end md:border-0 md:pt-0"
     >
       <li>
-        <a href="#precios" class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8">
+        <a
+          href={`${home}#precios`}
+          class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8"
+        >
           {copy.pricing}
         </a>
       </li>
       <li>
-        <a href="#catalogo" class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8">
+        <a
+          href={`${home}#catalogo`}
+          class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8"
+        >
           {copy.catalog}
         </a>
       </li>
       <li>
-        <a href="#contacto" class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8">
+        <a
+          href={`${home}#contacto`}
+          class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8"
+        >
           {copy.contact}
+        </a>
+      </li>
+      <li>
+        <a
+          href={tosRoutes[lang]}
+          aria-current={page === 'tos' ? 'page' : undefined}
+          class:list={[
+            'flex min-h-10 items-center px-2 md:min-h-8',
+            page === 'tos' ? 'bg-white/25 font-bold underline underline-offset-2' : 'hover:bg-white/25',
+          ]}
+        >
+          {copy.tos}
         </a>
       </li>
     </ul>
@@ -49,7 +74,7 @@ const languages: Lang[] = ['es', 'en'];
           <>
             {i > 0 && <span aria-hidden="true" class="opacity-60">|</span>}
             <a
-              href={routes[code]}
+              href={pageRoutes[code]}
               hreflang={code}
               lang={code}
               title={langLabels[code]}

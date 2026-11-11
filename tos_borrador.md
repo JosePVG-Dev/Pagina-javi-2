@@ -2,8 +2,8 @@
 
 Borrador para revisar con la artista antes de publicar. Los tramos en dólares se
 sustituyeron por **nivel de acabado**, así el texto no se rompe cuando cambien los precios.
-Datos que faltan confirmar: correo de contacto, @handle, resolución de entrega, si acepta
-PSD/capas, y qué contenido no dibuja.
+Datos que faltan confirmar: @handle, resolución de entrega, si acepta PSD/capas, qué contenido
+no dibuja, y la fecha de publicación.
 
 ---
 
@@ -19,13 +19,14 @@ antes de pagar.
 
 - Pago del 100 % por adelantado, por PayPal o transferencia chilena.
 - Entrega en 1–2 meses desde el pago, con avances según el nivel de acabado.
-- Uso personal incluido; el uso comercial se cotiza aparte.
+- Uso personal incluido; el uso comercial se cotiza y se cobra aparte.
 - No hay reembolsos una vez empezado el trabajo, salvo que cancele yo.
 
 **1. Pago**
 
 - Acepto PayPal y, si estás en Chile, transferencia a Banco Santander, MACH, Tenpo o Falabella.
 - El pago es del 100 % por adelantado. No trabajo con 50/50.
+- No aplico recargo por la comisión de PayPal.
 - Los recargos (personaje extra, fondo, urgencia, uso comercial) se cotizan antes y se pagan
   antes de empezar.
 - El plazo de entrega empieza cuando recibo el pago **y** las referencias completas.
@@ -36,21 +37,22 @@ antes de pagar.
 - Si necesito pausar el encargo (exámenes, salud), te aviso. Si la pausa la pides tú, el plazo
   se corre lo mismo.
 - Si no recibo respuesta tuya en 30 días, el encargo se cierra sin reembolso.
-- Si el retraso es mío y supera el doble del plazo acordado, puedes cancelar y te devuelvo la
-  parte no entregada.
+- Si me retraso, te aviso de inmediato para acordar un nuevo plazo.
 
 **3. Avances y revisiones**
 
-| Nivel de acabado | Avances incluidos | Rondas de ajuste |
-| --- | --- | --- |
-| Boceto / línea | solo si lo pides | 1 |
-| Color plano | 1 sketch | 2 |
-| Render completo | sketch + color | 3 |
+| Nivel de acabado | Avances incluidos |
+| --- | --- |
+| Boceto / línea | solo si lo pides |
+| Color plano | 1 sketch |
+| Render completo | sketch + color |
 
+- El avance se aprueba antes de pasar a la siguiente etapa.
 - Una «ronda» es un conjunto de cambios enviado de una vez, no un cambio suelto.
+- Cada encargo incluye hasta 3 rondas de ajustes.
+- A partir de la cuarta ronda cobro $5 USD por cada una, y se paga antes de aplicarla.
 - Los errores míos (olvidé un detalle de la referencia, un color mal puesto) se corrigen gratis,
   siempre.
-- Cada ronda extra se cotiza aparte y se paga antes de aplicarla.
 - Los cambios de diseño (otro peinado, otra pose, otro personaje) son un encargo nuevo.
 - Mi estilo evoluciona: dos encargos del mismo personaje pueden tener pequeñas variaciones.
   No es un defecto ni significa menos calidad.
@@ -65,7 +67,8 @@ antes de pagar.
 
 - El precio cubre **uso personal**: publicarlo en tus redes, usarlo de avatar o en tu perfil,
   imprimirlo para ti.
-- El **uso comercial** (merch, venta de prints, campañas, monetización) se cotiza aparte.
+- El **uso comercial** (merch, venta de prints, campañas, monetización) se cotiza y se cobra
+  aparte.
 - Puedes recortar, añadir texto o adaptar la pieza para un banner o un avatar.
 - No puedes repintarla, taparla ni redibujar encima de la obra que te entregué.
 - No puedes revenderla como tuya, usarla para entrenar IA ni acuñarla como NFT.
@@ -92,7 +95,8 @@ Puedo rechazar un encargo por contenido que no quiera dibujar. Si ya pagaste, te
 
 **9. Contacto**
 
-Escríbeme a [correo] o por Toyhouse (@handle). Respondo en un máximo de 48 h hábiles.
+Escríbeme a horseland212002@gmail.com o por Toyhouse (@handle). Respondo en un máximo de 48 h
+hábiles.
 
 *Al pagar aceptas estos términos.*
 
@@ -110,13 +114,14 @@ before you pay.
 
 - 100 % payment upfront, via PayPal or Chilean bank transfer.
 - Delivery in 1–2 months from payment, with previews depending on the finish level.
-- Personal use included; commercial use is quoted separately.
+- Personal use included; commercial use is quoted and charged separately.
 - No refunds once work has started, unless I cancel.
 
 **1. Payment**
 
 - I accept PayPal and, if you are in Chile, transfer to Banco Santander, MACH, Tenpo or Falabella.
 - Payment is 100 % upfront. I do not work 50/50.
+- I do not add a PayPal fee surcharge.
 - Add-ons (extra character, background, rush, commercial use) are quoted first and paid before
   I start.
 - The delivery clock starts when I receive the payment **and** the complete references.
@@ -127,20 +132,21 @@ before you pay.
 - If I need to pause the commission (exams, health), I will tell you. If you ask for the pause,
   the deadline moves the same way.
 - If I get no reply from you for 30 days, the commission is closed without a refund.
-- If the delay is mine and exceeds twice the agreed deadline, you may cancel and I will refund
-  the undelivered part.
+- If I am late, I will tell you right away so we can agree on a new deadline.
 
 **3. Previews and revisions**
 
-| Finish level | Previews included | Revision rounds |
-| --- | --- | --- |
-| Sketch / line art | only on request | 1 |
-| Flat colour | 1 sketch | 2 |
-| Full render | sketch + colour | 3 |
+| Finish level | Previews included |
+| --- | --- |
+| Sketch / line art | only on request |
+| Flat colour | 1 sketch |
+| Full render | sketch + colour |
 
+- The preview is approved before moving on to the next stage.
 - A “round” is a set of changes sent at once, not a single edit.
+- Each commission includes up to 3 revision rounds.
+- From the fourth round on I charge USD $5 per round, paid before I apply it.
 - My own mistakes (a reference detail I missed, a wrong colour) are always fixed for free.
-- Each extra round is quoted separately and paid before I apply it.
 - Design changes (a different hairstyle, a different pose, a different character) are a new
   commission.
 - My style evolves: two pieces of the same character may differ slightly. That is not a defect
@@ -156,7 +162,8 @@ before you pay.
 
 - The price covers **personal use**: posting it on your socials, using it as an avatar or on your
   profile, printing it for yourself.
-- **Commercial use** (merch, print sales, campaigns, monetisation) is quoted separately.
+- **Commercial use** (merch, print sales, campaigns, monetisation) is quoted and charged
+  separately.
 - You may crop it, add text, or adapt the piece for a banner or an avatar.
 - You may not repaint it, cover it, or redraw on top of the artwork I delivered.
 - You may not resell it as your own, use it to train AI, or mint it as an NFT.
@@ -184,6 +191,7 @@ I may decline a commission over content I do not want to draw. If you already pa
 
 **9. Contact**
 
-Email me at [email] or reach me on Toyhouse (@handle). I reply within 48 business hours.
+Email me at horseland212002@gmail.com or reach me on Toyhouse (@handle). I reply within 48
+business hours.
 
 *By paying you accept these terms.*
