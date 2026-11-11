@@ -15,7 +15,7 @@ const { lang } = Astro.props;
 const copy = t[lang].hero;
 ---
 
-<section id="inicio" class="px-6 py-14 md:px-10 md:py-20">
+<section id="inicio" class="px-4 py-10 md:px-10 md:py-20">
   <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
     <!-- La marca sigue existiendo para lectores de pantalla y buscadores. -->
     <h1 class="sr-only">{copy.name}</h1>
@@ -27,7 +27,7 @@ const copy = t[lang].hero;
       </span>
     </div>
 
-    <div class="stamps mt-12" aria-hidden="true">
+    <div class="stamps mt-9 md:mt-12" aria-hidden="true">
       <img
         src={pareja.src}
         alt=""
@@ -57,7 +57,7 @@ const copy = t[lang].hero;
       />
     </div>
 
-    <div class="hero-actions mt-20">
+    <div class="hero-actions mt-10 md:mt-20">
       <a href="#contacto" class="button primary">{copy.primaryCta}</a>
       <a href="#catalogo" class="button">{copy.secondaryCta}</a>
     </div>
