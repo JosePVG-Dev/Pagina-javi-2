@@ -74,9 +74,8 @@ export interface Copy {
     fallbackPhoto: string;
     prev: string;
     next: string;
-    /** Etiqueta del botón que detiene el avance automático. */
+    /** Control manual del avance automático (WCAG 2.2.2). */
     pauseAutoplay: string;
-    /** Etiqueta del botón que reanuda el avance automático. */
     playAutoplay: string;
   };
   catalog: {
@@ -157,7 +156,7 @@ export const t: Record<Lang, Copy> = {
       fallbackPhoto: 'foto {n}',
       prev: 'Foto anterior',
       next: 'Foto siguiente',
-      pauseAutoplay: 'Detener el avance automático',
+      pauseAutoplay: 'Pausar el avance automático',
       playAutoplay: 'Reanudar el avance automático',
     },
     catalog: {
@@ -294,8 +293,8 @@ export const t: Record<Lang, Copy> = {
       fallbackPhoto: 'photo {n}',
       prev: 'Previous photo',
       next: 'Next photo',
-      pauseAutoplay: 'Stop the automatic slideshow',
-      playAutoplay: 'Resume the automatic slideshow',
+      pauseAutoplay: 'Pause the automatic slideshow',
+      playAutoplay: 'Start the automatic slideshow',
     },
     catalog: {
       heading: 'Selected works',

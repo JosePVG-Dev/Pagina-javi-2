@@ -182,12 +182,14 @@ const slideNames: Record<string, string> = {
             <button
               type="button"
               class="button carousel-arrow carousel-toggle"
-              data-autoplay-toggle
+              data-playpause
+              data-label-pause={copy.pauseAutoplay}
+              data-label-play={copy.playAutoplay}
               aria-label={copy.pauseAutoplay}
-              data-pause-label={copy.pauseAutoplay}
-              data-play-label={copy.playAutoplay}
+              title={copy.pauseAutoplay}
+              hidden
             >
-              <span aria-hidden="true" data-autoplay-icon>❚❚</span>
+              ❚❚
             </button>
             <button
               type="button"
@@ -234,33 +236,26 @@ const slideNames: Record<string, string> = {
     let dx = 0;
 
     /* ---------- avance automático ---------- */
-    const AUTOPLAY_MS = 3000;
-    const AUTOPLAY_KEY = 'javi:carousel-autoplay';
+    // 7 s: tiempo medido para leer el plano y pulsar antes del salto (WCAG 2.2.2).
+    // Se pausa al pasar el ratón, al enfocar con teclado y fuera de pantalla.
+    const AUTOPLAY_MS = 7000;
 
-    const toggle = root.querySelector<HTMLButtonElement>('[data-autoplay-toggle]');
-    const toggleIcon = root.querySelector<HTMLElement>('[data-autoplay-icon]');
-    const progress = root.querySelector<HTMLElement>('[data-progress]');
     const progressFill = root.querySelector<HTMLElement>('[data-progress-fill]');
-    const pauseLabel = toggle?.dataset.pauseLabel ?? '';
-    const playLabel = toggle?.dataset.playLabel ?? '';
+    const playPause = root.querySelector<HTMLButtonElement>('[data-playpause]');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     if (progressFill) progressFill.style.animationDuration = `${AUTOPLAY_MS}ms`;
 
     let timer: number | undefined;
+    let remaining = AUTOPLAY_MS; // tiempo que le queda al avance en curso
+    let deadline = 0;
     let hovering = false;
     let focused = false;
     let onScreen = true;
-    let stopped = false; // el visitante navegó a mano: no vuelve a arrancar
-    let optedOut = false; // el visitante pulsó pausa: se recuerda entre visitas
+    let userPaused = false; // decisión explícita del botón ❚❚ / ▶
 
-    try {
-      optedOut = window.localStorage.getItem(AUTOPLAY_KEY) === 'off';
-    } catch {
-      /* almacenamiento bloqueado: seguimos con el valor por defecto */
-    }
-
-    const canAutoplay = () => total > 1 && !reducedMotion.matches && !stopped && !optedOut;
+    const canPlay = () => total > 1 && !reducedMotion.matches;
+    const canAutoplay = () => canPlay() && !userPaused;
 
     const goTo = (next: number) => {
       index = (next + total) % total;
@@ -292,12 +287,12 @@ const slideNames: Record<string, string> = {
     };
 
     root.querySelector('[data-prev]')?.addEventListener('click', () => {
-      stopAutoplay();
       goTo(index - 1);
+      pauseOnInteract();
     });
     root.querySelector('[data-next]')?.addEventListener('click', () => {
-      stopAutoplay();
       goTo(index + 1);
+      pauseOnInteract();
     });
 
     viewport?.addEventListener('pointerdown', (event) => {
@@ -307,7 +302,7 @@ const slideNames: Record<string, string> = {
       startX = event.clientX;
       dx = 0;
       dragging = true;
-      clearTimer();
+      pause();
       viewport.setPointerCapture(event.pointerId);
       if (track) track.style.transition = 'none';
     });
@@ -326,8 +321,8 @@ const slideNames: Record<string, string> = {
       if (track) track.style.transition = '';
 
       if (Math.abs(dx) > 40) {
-        stopAutoplay();
         goTo(index + (dx < 0 ? 1 : -1));
+        pauseOnInteract();
       } else goTo(index);
       dx = 0;
     };
@@ -337,25 +332,25 @@ const slideNames: Record<string, string> = {
 
     rows.forEach((row, i) =>
       row.addEventListener('click', () => {
-        stopAutoplay();
         goTo(i);
+        pauseOnInteract();
       })
     );
     dots.forEach((dot, i) =>
       dot.addEventListener('click', () => {
-        stopAutoplay();
         goTo(i);
+        pauseOnInteract();
       })
     );
 
     root.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowLeft') {
-        stopAutoplay();
         goTo(index - 1);
+        pauseOnInteract();
       }
       if (event.key === 'ArrowRight') {
-        stopAutoplay();
         goTo(index + 1);
+        pauseOnInteract();
       }
     });
 
@@ -379,19 +374,13 @@ const slideNames: Record<string, string> = {
       progressFill.style.animationPlayState = 'running';
     }
 
-    function syncToggle() {
-      if (!toggle) return;
-      const playing = canAutoplay();
-      toggle.setAttribute('aria-label', playing ? pauseLabel : playLabel);
-      if (toggleIcon) toggleIcon.textContent = playing ? '❚❚' : '▶';
-      progress?.toggleAttribute('data-idle', !playing);
-    }
-
     function schedule() {
       clearTimer();
       if (!canAutoplay() || !onScreen || hovering || focused || dragging) return;
 
+      remaining = AUTOPLAY_MS;
       restartProgress();
+      deadline = performance.now() + AUTOPLAY_MS;
       timer = window.setTimeout(() => {
         timer = undefined;
         goTo(index + 1);
@@ -399,65 +388,102 @@ const slideNames: Record<string, string> = {
       }, AUTOPLAY_MS);
     }
 
-    function stopAutoplay() {
-      if (stopped) return;
-      stopped = true;
+    /* Pausa sin perder el punto en el que iba: guarda lo que falta del
+       temporizador y congela la barra. Al reanudar, ambos siguen desde ahí. */
+    function pause() {
+      if (timer !== undefined) {
+        remaining = Math.max(0, deadline - performance.now());
+      }
       clearTimer();
+    }
+
+    /* Reanuda desde `remaining`, sin reiniciar la barra ni el conteo. */
+    function resume() {
+      if (timer !== undefined) return;
+      if (!canAutoplay() || !onScreen || hovering || focused || dragging) return;
+
+      const wait = Math.max(0, remaining);
+
+      deadline = performance.now() + wait;
+      if (progressFill) progressFill.style.animationPlayState = 'running';
+      timer = window.setTimeout(() => {
+        timer = undefined;
+        goTo(index + 1);
+        schedule();
+      }, wait);
+    }
+
+    /* Navegación manual: el avance se detiene y queda a cargo del botón ▶.
+       Si no, el carrusel arrastra la vista a mitad de la exploración. */
+    function pauseOnInteract() {
+      remaining = AUTOPLAY_MS;
+      if (!canPlay()) return;
+      userPaused = true;
+      pause();
       syncToggle();
     }
 
-    toggle?.addEventListener('click', () => {
-      const playing = canAutoplay();
+    /* Refleja el estado en el botón y oculta la barra cuando no hay avance. */
+    function syncToggle() {
+      const playing = !userPaused;
 
-      if (playing) {
-        optedOut = true;
-      } else {
-        optedOut = false;
-        stopped = false;
+      carousel.toggleAttribute('data-autoplay-off', !canPlay() || userPaused);
+      if (!playPause) return;
+
+      const label = playing ? playPause.dataset.labelPause : playPause.dataset.labelPlay;
+      playPause.hidden = !canPlay();
+      playPause.textContent = playing ? '❚❚' : '▶';
+      if (label) {
+        playPause.setAttribute('aria-label', label);
+        playPause.title = label;
       }
+    }
 
-      try {
-        window.localStorage.setItem(AUTOPLAY_KEY, optedOut ? 'off' : 'on');
-      } catch {
-        /* almacenamiento bloqueado: la elección solo dura esta visita */
-      }
-
-      syncToggle();
-      if (optedOut) clearTimer();
+    playPause?.addEventListener('click', () => {
+      userPaused = !userPaused;
+      if (userPaused) pause();
       else schedule();
+      syncToggle();
     });
 
-    carousel.addEventListener('pointerenter', () => {
+    /* El avance se detiene solo cuando el puntero está sobre la foto. Si el
+       cursor se queda en las flechas o los puntos, el carrusel sigue vivo. */
+    viewport?.addEventListener('pointerenter', () => {
       hovering = true;
-      clearTimer();
+      pause();
     });
 
-    carousel.addEventListener('pointerleave', () => {
+    viewport?.addEventListener('pointerleave', () => {
       hovering = false;
-      schedule();
+      resume();
     });
 
-    carousel.addEventListener('focusin', () => {
-      focused = true;
-      clearTimer();
+    /* Solo el foco de teclado frena el avance: el que deja un clic con el
+       ratón no debe congelarlo. El propio botón de avance no cuenta: si lo
+       enfocas para reanudar, el carrusel debe moverse. */
+    carousel.addEventListener('focusin', (event) => {
+      if (playPause && event.target === playPause) return;
+      focused = !(event.target instanceof Element) || event.target.matches(':focus-visible');
+      if (focused) pause();
+      else resume();
     });
 
     carousel.addEventListener('focusout', () => {
       focused = false;
-      schedule();
+      resume();
     });
 
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) clearTimer();
-      else schedule();
+      if (document.hidden) pause();
+      else resume();
     });
 
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(
         (entries) => {
           onScreen = entries.some((entry) => entry.isIntersecting);
-          if (onScreen) schedule();
-          else clearTimer();
+          if (onScreen) resume();
+          else pause();
         },
         { threshold: 0.15 }
       ).observe(carousel);
@@ -469,9 +495,8 @@ const slideNames: Record<string, string> = {
     });
 
     /* Con movimiento reducido o una sola foto no hay nada que pausar. */
-    root.toggleAttribute('data-autoplay-off', reducedMotion.matches || total < 2);
-
     syncToggle();
+
     goTo(index);
     schedule();
   }
