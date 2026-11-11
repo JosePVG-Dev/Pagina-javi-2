@@ -11,44 +11,62 @@ const languages: Lang[] = ['es', 'en'];
 ---
 
 <header class="top-panel sticky top-0 z-20">
-  <nav class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-1.5">
-    <a href="#inicio" class="text-[12px] font-bold uppercase tracking-[0.25em]">Bloomysrkj</a>
-    <div class="flex items-center gap-2">
-      <ul class="flex items-center gap-1 text-[11px]">
-        <li><a href="#precios" class="block px-2 py-1 hover:bg-white/25">{copy.pricing}</a></li>
-        <li><a href="#catalogo" class="block px-2 py-1 hover:bg-white/25">{copy.catalog}</a></li>
-        <li><a href="#contacto" class="block px-2 py-1 hover:bg-white/25">{copy.contact}</a></li>
-      </ul>
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 px-4 py-1.5">
+    <a
+      href="#inicio"
+      class="order-1 flex min-h-9 items-center text-[12px] font-bold uppercase tracking-[0.25em] md:min-h-8"
+    >
+      Bloomysrkj
+    </a>
 
-      <div
-        class="flex items-center gap-0.5 border-l border-white/30 pl-2 text-[11px]"
-        role="group"
-        aria-label={copy.language}
-      >
-        {
-          languages.map((code, i) => (
-            <>
-              {i > 0 && <span aria-hidden="true" class="opacity-60">|</span>}
-              <a
-                href={routes[code]}
-                hreflang={code}
-                lang={code}
-                title={langLabels[code]}
-                data-lang={code}
-                aria-current={code === lang ? 'true' : undefined}
-                class:list={[
-                  'block px-1.5 py-1',
-                  code === lang
-                    ? 'bg-white/25 font-bold underline underline-offset-2'
-                    : 'hover:bg-white/25',
-                ]}
-              >
-                {code.toUpperCase()}
-              </a>
-            </>
-          ))
-        }
-      </div>
+    <ul
+      class="order-3 flex w-full items-center justify-between gap-1 border-t border-white/25 pt-0.5 text-[11px] md:order-2 md:w-auto md:justify-end md:border-0 md:pt-0"
+    >
+      <li>
+        <a href="#precios" class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8">
+          {copy.pricing}
+        </a>
+      </li>
+      <li>
+        <a href="#catalogo" class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8">
+          {copy.catalog}
+        </a>
+      </li>
+      <li>
+        <a href="#contacto" class="flex min-h-10 items-center px-2 hover:bg-white/25 md:min-h-8">
+          {copy.contact}
+        </a>
+      </li>
+    </ul>
+
+    <div
+      class="order-2 flex min-h-9 items-center gap-0.5 text-[11px] md:order-3 md:min-h-8 md:border-l md:border-white/30 md:pl-2"
+      role="group"
+      aria-label={copy.language}
+    >
+      {
+        languages.map((code, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true" class="opacity-60">|</span>}
+            <a
+              href={routes[code]}
+              hreflang={code}
+              lang={code}
+              title={langLabels[code]}
+              data-lang={code}
+              aria-current={code === lang ? 'true' : undefined}
+              class:list={[
+                'flex min-h-9 items-center px-1.5 md:min-h-8',
+                code === lang
+                  ? 'bg-white/25 font-bold underline underline-offset-2'
+                  : 'hover:bg-white/25',
+              ]}
+            >
+              {code.toUpperCase()}
+            </a>
+          </>
+        ))
+      }
     </div>
   </nav>
 </header>
