@@ -3,6 +3,7 @@ import '../../styles/xp/wordart.css';
 import '../../styles/xp/stamps.css';
 import '../../styles/xp/hero.css';
 import { t, type Lang } from '../../i18n/ui';
+import { heroBlinkies, megaman, stickerShelf } from '../../data/stamps';
 import pareja from '../../assets/stamps/pareja.gif';
 import evoluciones from '../../assets/stamps/evoluciones.gif';
 import rainbow from '../../assets/stamps/no-rain-no-rainbows.gif';
@@ -15,51 +16,118 @@ const { lang } = Astro.props;
 const copy = t[lang].hero;
 ---
 
-<section id="inicio" class="px-4 py-10 md:px-10 md:py-20">
-  <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
-    <!-- La marca sigue existiendo para lectores de pantalla y buscadores. -->
-    <h1 class="sr-only">{copy.name}</h1>
+<section id="inicio" class="px-4 pt-6 pb-10 md:px-10 md:pt-14 md:pb-20">
+  <div class="mx-auto flex max-w-5xl flex-col items-center text-center">
+    <div class="flex max-w-3xl flex-col items-center">
+      <!-- La marca sigue existiendo para lectores de pantalla y buscadores. -->
+      <h1 class="sr-only">{copy.name}</h1>
 
-    <div class="wordart-wrap">
-      <span class="wordart">
-        <span class="wordart__shade" aria-hidden="true">{copy.wordart}</span>
-        <span class="wordart__text">{copy.wordart}</span>
-      </span>
+      <div class="wordart-wrap">
+        <span class="wordart">
+          <span class="wordart__shade" aria-hidden="true">{copy.wordart}</span>
+          <span class="wordart__text">{copy.wordart}</span>
+        </span>
+      </div>
+
+      <div class="stamps mt-7 md:mt-10" aria-hidden="true">
+        <div class="stamps__feature">
+          <img
+            src={pareja.src}
+            alt=""
+            width="193"
+            height="127"
+            class="stamp--pareja"
+            loading="eager"
+            decoding="async"
+          />
+          <img
+            src={megaman.feature.src}
+            alt=""
+            width={megaman.feature.width}
+            height={megaman.feature.height}
+            class="stamp--megaman"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+
+        <div class="stamps__strip">
+          {
+            megaman.strip.map((stamp) => (
+              <img
+                src={stamp.src}
+                alt=""
+                width={stamp.width}
+                height={stamp.height}
+                loading="eager"
+                decoding="async"
+              />
+            ))
+          }
+          <img
+            src={evoluciones.src}
+            alt=""
+            width="279"
+            height="39"
+            class="stamp--evoluciones"
+            loading="eager"
+            decoding="async"
+          />
+          <img
+            src={rainbow.src}
+            alt=""
+            width="150"
+            height="20"
+            class="stamp--rainbow"
+            loading="eager"
+            decoding="async"
+          />
+          {
+            heroBlinkies.map((stamp) => (
+              <img
+                src={stamp.src}
+                alt=""
+                width={stamp.width}
+                height={stamp.height}
+                loading="eager"
+                decoding="async"
+              />
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="hero-actions mt-8 md:mt-12">
+        <a href="#contacto" class="button primary">{copy.primaryCta}</a>
+        <a href="#catalogo" class="button">{copy.secondaryCta}</a>
+      </div>
     </div>
 
-    <div class="stamps mt-9 md:mt-12" aria-hidden="true">
+    <!-- Repisa de stickers del perfil de Toyhouse: decoración, no contenido. -->
+    <div class="sticker-shelf mt-10 md:mt-12" aria-hidden="true">
       <img
-        src={pareja.src}
+        class="sticker-shelf__divider"
+        src={stickerShelf.divider.src}
         alt=""
-        width="193"
-        height="127"
-        class="stamp--pareja"
-        loading="eager"
+        width={stickerShelf.divider.width}
+        height={stickerShelf.divider.height}
+        loading="lazy"
         decoding="async"
       />
-      <img
-        src={evoluciones.src}
-        alt=""
-        width="279"
-        height="39"
-        class="stamp--evoluciones"
-        loading="eager"
-        decoding="async"
-      />
-      <img
-        src={rainbow.src}
-        alt=""
-        width="150"
-        height="20"
-        class="stamp--rainbow"
-        loading="eager"
-        decoding="async"
-      />
-    </div>
-
-    <div class="hero-actions mt-10 md:mt-20">
-      <a href="#contacto" class="button primary">{copy.primaryCta}</a>
-      <a href="#catalogo" class="button">{copy.secondaryCta}</a>
+      <div class="sticker-shelf__row">
+        {
+          stickerShelf.stickers.map((sticker) => (
+            <img
+              src={sticker.src}
+              alt=""
+              width={sticker.width}
+              height={sticker.height}
+              loading="lazy"
+              decoding="async"
+            />
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>

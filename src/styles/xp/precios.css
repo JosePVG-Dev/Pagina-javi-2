@@ -1,103 +1,93 @@
-/* Lista de precios + carrusel. Todo acotado a #precios.
-   Estas reglas van sin capa para poder ganarle a los estilos de botón
-   que trae el tema XP (classic-stylesheets). */
+/* Matriz de precios + galería de ejemplos. Todo acotado a #precios.
+   Estas reglas van sin capa para poder ganarle a los estilos de tabla y de
+   botón que trae el tema XP (classic-stylesheets). */
 
-#precios .price-list {
-  padding: 2px;
-}
+/* ---------- matriz de precios ---------- */
 
-#precios .price-row {
-  display: flex;
+/* Acabados en columnas, formatos en filas. Dos bloques: personaje existente
+   y diseño custom, separados por una banda con el nombre del bloque. */
+#precios .price-matrix {
   width: 100%;
-  min-width: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 10px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  color: inherit;
-  font: inherit;
+  border: 1px solid #7f9db9;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 11px;
   line-height: 1.35;
+}
+
+#precios .price-matrix th,
+#precios .price-matrix td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e4e1d4;
   text-align: left;
-  cursor: pointer;
+  vertical-align: middle;
 }
 
-#precios .price-row::after {
-  display: none;
+#precios .price-matrix thead th {
+  background: #ece9dd;
+  color: #3a3a30;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  text-transform: uppercase;
 }
 
-#precios .price-row:hover {
-  background: rgba(49, 106, 197, 0.12);
+#precios .price-matrix thead th:not(:first-child) {
+  text-align: right;
 }
 
-#precios .price-row[aria-current='true'] {
-  background: var(--selection-bg);
-  color: var(--selection-fg);
-}
-
-#precios .price-row:focus-visible {
-  outline: 1px dotted #000;
-  outline-offset: -2px;
-}
-
-#precios .price-row[aria-current='true']:focus-visible {
-  outline-color: var(--selection-inverse);
-}
-
-#precios .price-row-name {
-  display: block;
+#precios .price-matrix tbody th[scope='row'] {
   font-weight: bold;
 }
 
-#precios .price-row-tag {
-  display: block;
-  font-size: 10px;
-  opacity: 0.72;
-}
-
-#precios .price-row-amount {
-  font-size: 18px;
+#precios .price-matrix td {
+  text-align: right;
+  font-size: 14px;
   font-weight: bold;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-#precios .price-row-amount span {
-  font-size: 11px;
+/* La última fila de cada bloque no necesita línea de cierre: la banda del
+   bloque custom ya dibuja su borde superior. */
+#precios .price-matrix tbody tr:last-child > th,
+#precios .price-matrix tbody tr:last-child > td {
+  border-bottom: 0;
+}
+
+#precios .price-cell-currency {
+  font-size: 10px;
   vertical-align: top;
 }
 
-/* ---------- puerta de entrada ---------- */
-
-/* Primer renglón de la lista: mismo sitio que los demás precios, pero con el
-   fondo apagado para que se lea como puerta y no como un peldaño más. */
-#precios .price-row--entry {
+#precios .price-matrix-sub th {
   background: #f7f5ec;
+  border-top: 1px solid #c9c6b5;
+  padding: 8px;
+  text-align: left;
 }
 
-#precios .price-badge--quiet {
-  background: #dcd9ca;
-  color: #3a3a30;
+#precios .price-matrix-sub-name {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
 }
 
-#precios .price-row[href] {
-  text-decoration: none;
-}
-
-/* ---------- plan a cotizar ---------- */
-
-/* Cierra la lista: borde punteado en vez de cifra. */
-#precios .price-row--custom {
-  border-top: 1px dashed #a9a792;
-  background: #f7f5ec;
-}
-
-#precios .price-row-amount--text {
+#precios .price-matrix-sub-note {
+  display: block;
+  color: #6b6b5e;
   font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: normal;
+}
+
+/* ---------- puerta de entrada y notas ---------- */
+
+/* Icono 1:1: vive fuera de la matriz porque no se combina con los acabados. */
+#precios .price-entry {
+  margin-top: 10px;
+  color: #4a4a4a;
+  font-size: 10px;
 }
 
 #precios .price-addons {
@@ -106,22 +96,22 @@
   font-size: 10px;
 }
 
-/* ---------- carrusel ---------- */
+/* ---------- galería ---------- */
 
 #precios .carousel-viewport {
   position: relative;
   overflow: hidden;
   height: 420px;
   border: 1px solid #7f9db9;
-  background-color: #0b1220;
-  /* El velo oscuro va como primera capa: baja el brillo del fondo futurista
-     para que el dibujo (que es transparente) gane contraste, sin tocar la obra. */
+  background-color: #1c1030;
+  /* El velo oscuro va como primera capa: apaga el fondo de estrellas para que
+     la obra (que es transparente) gane contraste, dejando ver el arcoíris. */
   background-image:
-    linear-gradient(rgba(4, 10, 22, 0.7), rgba(4, 10, 22, 0.7)),
-    url('../../assets/carousel/desktop.webp');
+    linear-gradient(rgba(8, 10, 24, 0.5), rgba(8, 10, 24, 0.5)),
+    url('../../assets/carousel/estrellas.webp');
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center 58%;
+  background-position: center;
   touch-action: pan-y;
   cursor: grab;
 }
@@ -242,13 +232,8 @@
   outline-offset: 2px;
 }
 
-#precios [data-cta] {
-  padding: 8px 16px;
-}
-
 #precios button,
-#precios .button,
-#precios .price-row {
+#precios .button {
   cursor: pointer;
 }
 
@@ -258,14 +243,20 @@
   }
 }
 
-/* En móvil y tablet el renglón es zona de toque: más alto y nombre legible. */
+/* En móvil y tablet la matriz es zona de lectura: celdas más altas y el
+   nombre del formato a tamaño legible. */
 @media (max-width: 1023px) {
-  #precios .price-row {
-    min-height: 44px;
+  #precios .price-matrix th,
+  #precios .price-matrix td {
+    padding: 8px 6px;
   }
 
-  #precios .price-row-name {
+  #precios .price-matrix tbody th[scope='row'] {
     font-size: 12px;
+  }
+
+  #precios .price-matrix td {
+    font-size: 13px;
   }
 }
 

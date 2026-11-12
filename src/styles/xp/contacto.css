@@ -23,10 +23,44 @@
   gap: 12px 14px;
 }
 
+/* Los tres ejes del precio van juntos, en una sola fila cuando hay sitio. */
+#contacto .brief-selects {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px 14px;
+}
+
 @media (min-width: 640px) {
   #contacto .brief-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  #contacto .brief-selects {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Precio que sale de la matriz: caja hundida con el rango a la vista. */
+#contacto .brief-quote {
+  margin: 12px 0;
+  padding: 8px 10px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+  box-shadow: inset 1px 1px 0 #d6d3c2;
+}
+
+#contacto .brief-quote-value {
+  margin: 2px 0 0;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+#contacto .brief-quote-note {
+  margin: 4px 0 0;
+  color: #6b6b5e;
+  font-size: 10px;
 }
 
 #contacto .brief-field {

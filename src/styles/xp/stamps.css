@@ -4,48 +4,143 @@
 
 .stamps {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.75rem 1rem;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .stamps img {
   display: block;
+  width: auto;
   max-width: 100%;
   height: auto;
   image-rendering: pixelated;
 }
 
-@media (min-width: 768px) {
-  .stamps {
-    gap: 1rem 2rem;
-  }
+/* Pareja + ilustración grande de Megaman: misma altura para que se lean como
+   un par y no como dos pegatinas sueltas. */
+.stamps__feature {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.stamps__feature .stamp--pareja,
+.stamps__feature .stamp--megaman {
+  max-height: 128px;
+}
+
+/* Tira de sellos pequeños y blinkies: mezcla alturas nativas (56 px y 20 px)
+   y se apoya en el centro, como una fila de sellos pegados. */
+.stamps__strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 0.5rem;
+}
+
+.stamps__strip img {
+  max-height: 56px;
 }
 
 .stamps .stamp--pareja {
-  transform: rotate(-5deg);
+  transform: rotate(-4deg);
 }
 
-.stamps .stamp--evoluciones {
+.stamps__strip .stamp--evoluciones {
   transform: rotate(-2deg);
 }
 
-.stamps .stamp--rainbow {
-  transform: rotate(3deg);
+.stamps__strip .stamp--rainbow {
+  transform: rotate(2.5deg);
 }
 
-/* En móvil los GIF se reducen para no apilarse en tres filas. */
+.stamps__strip img:nth-child(5n + 2) {
+  transform: rotate(1.5deg);
+}
+
+.stamps__strip img:nth-child(5n + 4) {
+  transform: rotate(-1.5deg);
+}
+
+@media (min-width: 768px) {
+  .stamps {
+    gap: 1rem;
+  }
+
+  .stamps__feature .stamp--pareja,
+  .stamps__feature .stamp--megaman {
+    max-height: 150px;
+  }
+
+  .stamps__strip img {
+    max-height: 64px;
+  }
+}
+
 @media (max-width: 767px) {
-  .stamps .stamp--pareja {
-    max-width: 40%;
+  .stamps__feature .stamp--pareja,
+  .stamps__feature .stamp--megaman {
+    max-height: 112px;
   }
 
-  .stamps .stamp--evoluciones {
-    max-width: 52%;
+  /* Blinkies en su tamaño real: se leen mejor que escaladas. */
+  .stamps__strip .stamp--rainbow {
+    max-height: 20px;
+  }
+}
+
+/* Repisa de stickers del perfil de Toyhouse: una franja baja para que el hero
+   no crezca y los botones sigan a la vista. Los tamaños nativos mandan; solo
+   se limita la altura de las piezas grandes. */
+.sticker-shelf {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sticker-shelf__divider {
+  display: block;
+  width: 100%;
+  max-width: 620px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.sticker-shelf__row {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.65rem;
+}
+
+.sticker-shelf__row img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 46px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+@media (max-width: 767px) {
+  .sticker-shelf {
+    gap: 0.5rem;
   }
 
-  .stamps .stamp--rainbow {
-    max-width: 35%;
+  .sticker-shelf__row {
+    gap: 0.4rem 0.5rem;
+  }
+
+  .sticker-shelf__row img {
+    max-height: 36px;
   }
 }

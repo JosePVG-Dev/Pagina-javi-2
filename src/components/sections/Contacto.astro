@@ -1,5 +1,11 @@
 ---
-import { entryPrice, featuredPlanIndex, plans } from '../../data/planes';
+import {
+  designIds,
+  finishIds,
+  formatIds,
+  priceFor,
+  prices,
+} from '../../data/planes';
 import { t, type Lang } from '../../i18n/ui';
 import '../../styles/xp/contacto.css';
 
@@ -10,17 +16,14 @@ interface Props {
 const { lang } = Astro.props;
 const copy = t[lang].contact;
 const pricing = t[lang].pricing;
-const plansCopy = t[lang].plans;
 
 const email = 'horseland212002@gmail.com';
 
-// Opciones del plan: los mismos peldaños de la lista de precios.
-const planOptions = [
-  `${pricing.entry.name} — $${entryPrice}`,
-  ...plans.map((plan) => `${plansCopy[plan.id].name} — $${plan.price}`),
-  `${pricing.custom.name} — ${pricing.custom.amount}`,
-];
-const defaultPlan = planOptions[featuredPlanIndex + 1] ?? planOptions[0];
+// Punto de entrada de la matriz: un chibi simple sobre un personaje existente.
+const defaultFormat = 'chibi';
+const defaultFinish = 'simple';
+const defaultDesign = 'oc';
+const defaultPrice = priceFor(defaultDesign, defaultFormat, defaultFinish);
 ---
 
 <section id="contacto" class="px-4 py-4 md:px-10 md:py-8">
@@ -37,22 +40,63 @@ const defaultPlan = planOptions[featuredPlanIndex + 1] ?? planOptions[0];
       data-mail-subject={copy.mail.subject}
       data-ready={copy.form.ready}
       data-attach={copy.form.attach}
+      data-prices={JSON.stringify(prices)}
     >
       <p class="brief-legend">{copy.form.legend}</p>
 
-      <div class="brief-grid">
+      <!-- Tres ejes combinables: el precio sale de la matriz de Precios. -->
+      <div class="brief-selects">
         <label class="brief-field">
-          <span class="brief-label">{copy.form.plan}</span>
-          <select name="plan">
-            {planOptions.map((option) => (
-              <option value={option} selected={option === defaultPlan}>{option}</option>
+          <span class="brief-label">{copy.form.format}</span>
+          <select name="formato">
+            {formatIds.map((id) => (
+              <option value={id} selected={id === defaultFormat}>
+                {pricing.formats[id]}
+              </option>
             ))}
           </select>
         </label>
 
         <label class="brief-field">
+          <span class="brief-label">{copy.form.finish}</span>
+          <select name="acabado">
+            {finishIds.map((id) => (
+              <option value={id} selected={id === defaultFinish}>
+                {pricing.finishes[id]}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label class="brief-field">
+          <span class="brief-label">{copy.form.design}</span>
+          <select name="diseno">
+            {designIds.map((id) => (
+              <option value={id} selected={id === defaultDesign}>
+                {pricing.designs[id]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div class="brief-quote" data-quote-field>
+        <span class="brief-label">{copy.form.quoteLabel}</span>
+        <p class="brief-quote-value" data-quote aria-live="polite">${defaultPrice}</p>
+        <p class="brief-quote-note">{copy.form.quoteHint}</p>
+      </div>
+
+      <div class="brief-grid">
+        <label class="brief-field">
           <span class="brief-label">{copy.form.discord}</span>
-          <input type="text" name="discord" autocomplete="off" placeholder="user" />
+          <input
+            type="text"
+            name="discord"
+            autocomplete="off"
+            placeholder="user"
+            required
+            pattern=".*\S.*"
+          />
           <span class="brief-hint">{copy.form.discordHint}</span>
         </label>
 
@@ -78,18 +122,89 @@ const defaultPlan = planOptions[featuredPlanIndex + 1] ?? planOptions[0];
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-brief-form]');
   const status = document.querySelector<HTMLElement>('[data-brief-status]');
-  const select = form?.querySelector<HTMLSelectElement>('select[name="plan"]');
+  const quote = form?.querySelector<HTMLElement>('[data-quote]');
 
   const to = form?.dataset.mailTo;
   const subject = form?.dataset.mailSubject ?? '';
 
-  // El plan elegido en Precios llega por evento y se refleja en el desplegable.
-  window.addEventListener('javi:plan', (event) => {
-    const plan = (event as CustomEvent<{ label?: string }>).detail?.label;
-    if (!plan || !select) return;
+  type PriceTable = Record<string, Record<string, Record<string, string>>>;
 
-    if ([...select.options].some((option) => option.value === plan)) select.value = plan;
-  });
+  const priceTable: PriceTable = form?.dataset.prices ? JSON.parse(form.dataset.prices) : {};
+
+  const formatSelect = form?.querySelector<HTMLSelectElement>('select[name="formato"]');
+  const finishSelect = form?.querySelector<HTMLSelectElement>('select[name="acabado"]');
+  const designSelect = form?.querySelector<HTMLSelectElement>('select[name="diseno"]');
+
+  const nameOf = (select: HTMLSelectElement | null | undefined) =>
+    select?.selectedOptions[0]?.textContent?.trim() ?? '';
+
+  // El custom no tiene half body: cada select limita las opciones del otro.
+  const optionsOf = (select: HTMLSelectElement | null | undefined) => [...(select?.options ?? [])];
+  const firstEnabled = (select: HTMLSelectElement | null | undefined) =>
+    optionsOf(select).find((option) => !option.disabled);
+
+  const applyAvailability = () => {
+    const design = designSelect?.value ?? '';
+    const format = formatSelect?.value ?? '';
+
+    optionsOf(formatSelect).forEach((option) => {
+      option.disabled = !priceTable[design]?.[option.value];
+    });
+    optionsOf(designSelect).forEach((option) => {
+      option.disabled = !priceTable[option.value]?.[format];
+    });
+  };
+
+  // Se conserva lo que el usuario acaba de elegir y se corrige el otro extremo
+  // solo si esa combinación no existe.
+  const reconcile = (changed: 'format' | 'design') => {
+    if (changed === 'format') {
+      const format = formatSelect?.value ?? '';
+      if (designSelect && !priceTable[designSelect.value]?.[format]) {
+        const next = firstEnabled(designSelect);
+        if (next) designSelect.value = next.value;
+      }
+    } else {
+      const design = designSelect?.value ?? '';
+      if (formatSelect && !priceTable[design]?.[formatSelect.value]) {
+        const next = firstEnabled(formatSelect);
+        if (next) formatSelect.value = next.value;
+      }
+    }
+
+    applyAvailability();
+    syncQuote();
+  };
+
+  // Lee los tres ejes y devuelve el rango que corresponde en la matriz.
+  const readSelection = () => {
+    const format = formatSelect?.value ?? '';
+    const finish = finishSelect?.value ?? '';
+    const design = designSelect?.value ?? '';
+    const price = priceTable[design]?.[format]?.[finish] ?? '';
+
+    return {
+      format,
+      finish,
+      design,
+      formatName: nameOf(formatSelect),
+      finishName: nameOf(finishSelect),
+      designName: nameOf(designSelect),
+      price,
+    };
+  };
+
+  const syncQuote = () => {
+    const selection = readSelection();
+    if (quote) quote.textContent = selection.price ? `$${selection.price}` : '—';
+  };
+
+  designSelect?.addEventListener('change', () => reconcile('design'));
+  formatSelect?.addEventListener('change', () => reconcile('format'));
+  finishSelect?.addEventListener('change', syncQuote);
+
+  applyAvailability();
+  syncQuote();
 
   form?.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -97,14 +212,19 @@ const defaultPlan = planOptions[featuredPlanIndex + 1] ?? planOptions[0];
 
     const data = new FormData(form);
     const read = (key: string) => String(data.get(key) ?? '').trim();
+    const selection = readSelection();
 
-    const plan = read('plan') || '—';
     const files = form.querySelector<HTMLInputElement>('input[type="file"]')?.files;
     const count = files?.length ?? 0;
 
+    const combo = [selection.formatName, selection.finishName, selection.designName]
+      .filter(Boolean)
+      .join(' · ');
+    const plan = `${combo} — $${selection.price}`;
+
     const lines = [
       `Plan: ${plan}`,
-      read('discord') && `Discord: ${read('discord')}`,
+      `Discord: ${read('discord')}`,
       read('referencias') && `Referencias:\n${read('referencias')}`,
       count > 0 && `Adjunto ${count} archivo(s) de referencia.`,
     ].filter(Boolean) as string[];

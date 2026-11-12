@@ -1,4 +1,4 @@
-import type { CatalogId, PlanId, PricingId } from '../data/planes';
+import type { CatalogId, DesignId, FinishId, FormatId, GalleryId } from '../data/planes';
 
 export const locales = ['es', 'en'] as const;
 export type Lang = (typeof locales)[number];
@@ -20,11 +20,6 @@ export const langLabels: Record<Lang, string> = {
   es: 'Español',
   en: 'English',
 };
-
-export interface PlanCopy {
-  name: string;
-  tag: string;
-}
 
 export interface CatalogCopy {
   title: string;
@@ -95,21 +90,24 @@ export interface Copy {
   pricing: {
     heading: string;
     intro: string;
-    /** Plantilla con {name}. */
-    choosePlan: string;
-    /** Puerta de entrada: primer renglón de la lista, sin competir con la escalera. */
+    /** Encabezado de la primera columna de la matriz. */
+    tableFormat: string;
+    /** Nombres de los tres formatos (filas de la matriz). */
+    formats: Record<FormatId, string>;
+    /** Nombres de los tres acabados (columnas de la matriz). */
+    finishes: Record<FinishId, string>;
+    /** Personaje existente vs. diseño desde cero (bloques de la matriz). */
+    designs: Record<DesignId, string>;
+    /** Aclaración del bloque custom, dentro de la banda que lo separa. */
+    customNote: string;
+    /** Puerta de entrada: icono 1:1, fuera de la matriz. */
     entry: {
       name: string;
       tag: string;
     };
-    /** Plan a cotizar: último renglón, sin precio propio. */
-    custom: {
-      name: string;
-      body: string;
-      amount: string;
-    };
     /** Extras que el mercado sí cobra y que no son peldaños. */
     addons: string;
+    cta: string;
     regionLabel: string;
     carouselRole: string;
     slideRole: string;
@@ -124,6 +122,8 @@ export interface Copy {
     /** Control manual del avance automático (WCAG 2.2.2). */
     pauseAutoplay: string;
     playAutoplay: string;
+    /** Nombre corto de cada foto, para los puntos del carrusel. */
+    galleryNames: Record<GalleryId, string>;
   };
   catalog: {
     heading: string;
@@ -139,7 +139,12 @@ export interface Copy {
     /** Formulario que arma el correo antes de enviarlo. */
     form: {
       legend: string;
-      plan: string;
+      /** Los tres ejes se combinan en un precio de la matriz. */
+      format: string;
+      finish: string;
+      design: string;
+      quoteLabel: string;
+      quoteHint: string;
       discord: string;
       discordHint: string;
       references: string;
@@ -157,8 +162,7 @@ export interface Copy {
     tagline: string;
     credit: string;
   };
-  plans: Record<PlanId, PlanCopy>;
-  photoAlts: Record<PricingId, string>;
+  photoAlts: Record<GalleryId, string>;
   catalogItems: Record<CatalogId, CatalogCopy>;
 }
 
@@ -179,25 +183,36 @@ export const t: Record<Lang, Copy> = {
       name: 'Bloomysrkj',
       primaryCta: 'Encargar pieza',
       secondaryCta: 'Ver catálogo',
-      wordart: 'holiii!! soy yo :3 ^_^',
+      wordart: '¡bienvenido!',
     },
     pricing: {
       heading: 'Tarifas claras',
       intro:
-        'Precios de referencia en dólares. Cada proyecto se cotiza según complejidad, formato y uso final.',
-      choosePlan: 'Elegir plan {name}',
+        'Precios de referencia en dólares. Elige formato, acabado y si el personaje ya existe o hay que diseñarlo.',
+      tableFormat: 'Formato',
+      formats: {
+        chibi: 'Chibi',
+        half: 'Half body',
+        full: 'Full body',
+      },
+      finishes: {
+        sketch: 'Sketch',
+        simple: 'Simple',
+        experimental: 'Experimental / detallado',
+      },
+      designs: {
+        oc: 'Personaje existente',
+        custom: 'Diseño custom',
+      },
+      customNote: 'Mismo formato y acabado, con el personaje diseñado desde cero.',
       entry: {
         name: 'Icono Custom',
         tag: 'Icono 1:1 en plano psicodélico — precio permanente.',
       },
-      custom: {
-        name: 'Custom',
-        body: 'Más de un personaje, fondo o uso comercial.',
-        amount: 'Cotización',
-      },
       addons:
         'Extras: personaje extra +$10 · fondo simple +$10 · fondo complejo +$25 · uso comercial ×2 · diseño complejo +$5–10 · boceto previo +$15.',
-      regionLabel: 'Ejemplos por plan',
+      cta: 'Pedir presupuesto',
+      regionLabel: 'Ejemplos de trabajos',
       carouselRole: 'carrusel',
       slideRole: 'diapositiva',
       slideLabel: '{n} de {total}',
@@ -207,6 +222,13 @@ export const t: Record<Lang, Copy> = {
       next: 'Foto siguiente',
       pauseAutoplay: 'Pausar el avance automático',
       playAutoplay: 'Reanudar el avance automático',
+      galleryNames: {
+        icon: 'Icono',
+        chibi: 'Chibi',
+        bust: 'Half body',
+        mega: 'Render full body',
+        custom: 'Custom',
+      },
     },
     catalog: {
       heading: 'Trabajos seleccionados',
@@ -220,14 +242,18 @@ export const t: Record<Lang, Copy> = {
       },
       form: {
         legend: 'Brief',
-        plan: 'Plan',
+        format: 'Formato',
+        finish: 'Acabado',
+        design: 'Diseño',
+        quoteLabel: 'Precio de referencia',
+        quoteHint: 'Rango en USD. Te confirmo el precio exacto al revisar el brief.',
         discord: 'Discord',
-        discordHint: 'opcional — si prefieres que te escriba por ahí',
+        discordHint: 'Tu usuario de Discord, para responderte por ahí.',
         references: 'Referencias',
         referencesHint: 'Enlaces a Toyhouse, Drive o Imgur',
         files: 'Imágenes de referencia',
         filesHint: 'Se adjuntan a mano en el correo',
-        submit: 'Preparar correo',
+        submit: 'Enviar brief',
         ready: 'Se abrió tu correo con todo escrito.',
         attach: 'Recuerda adjuntar {n} archivo(s) antes de enviar.',
       },
@@ -343,11 +369,6 @@ export const t: Record<Lang, Copy> = {
       tagline: 'Ilustración · Diseño · Arte digital',
       credit: 'Desarrollado por josepvg.dev',
     },
-    plans: {
-      chibi: { name: 'Chibi', tag: 'Icono o cuerpo completo, color pleno' },
-      bust: { name: 'Busto Render', tag: 'Medio cuerpo, render completo' },
-      mega: { name: 'Mega', tag: 'Medio cuerpo, densidad máxima' },
-    },
     photoAlts: {
       icon: 'Chibi de pelo rosa con vestido de encaje y cuernos rojos',
       chibi: 'Chibi de un personaje de cabello multicolor con orejas y cola',
@@ -424,25 +445,36 @@ export const t: Record<Lang, Copy> = {
       name: 'Bloomysrkj',
       primaryCta: 'Commission a piece',
       secondaryCta: 'View catalog',
-      wordart: 'uh hi its me!! :D',
+      wordart: 'Welcome',
     },
     pricing: {
       heading: 'Clear pricing',
       intro:
-        'Reference prices in US dollars. Every project is quoted on complexity, format and final use.',
-      choosePlan: 'Choose the {name} plan',
+        'Reference prices in US dollars. Pick a format, a finish, and whether the character already exists or has to be designed.',
+      tableFormat: 'Format',
+      formats: {
+        chibi: 'Chibi',
+        half: 'Half body',
+        full: 'Full body',
+      },
+      finishes: {
+        sketch: 'Sketch',
+        simple: 'Simple',
+        experimental: 'Experimental / detailed',
+      },
+      designs: {
+        oc: 'Existing character',
+        custom: 'Custom design',
+      },
+      customNote: 'Same format and finish, with the character designed from scratch.',
       entry: {
         name: 'Icon Custom',
         tag: '1:1 icon in flat psychedelic finish — permanent price.',
       },
-      custom: {
-        name: 'Custom',
-        body: 'More than one character, a background or commercial use.',
-        amount: 'By quote',
-      },
       addons:
         'Add-ons: extra character +$10 · simple background +$10 · complex background +$25 · commercial use ×2 · complex design +$5–10 · sketch pass +$15.',
-      regionLabel: 'Examples by plan',
+      cta: 'Request a quote',
+      regionLabel: 'Work examples',
       carouselRole: 'carousel',
       slideRole: 'slide',
       slideLabel: '{n} of {total}',
@@ -452,6 +484,13 @@ export const t: Record<Lang, Copy> = {
       next: 'Next photo',
       pauseAutoplay: 'Pause the automatic slideshow',
       playAutoplay: 'Start the automatic slideshow',
+      galleryNames: {
+        icon: 'Icon',
+        chibi: 'Chibi',
+        bust: 'Half body',
+        mega: 'Full body render',
+        custom: 'Custom',
+      },
     },
     catalog: {
       heading: 'Selected works',
@@ -465,14 +504,18 @@ export const t: Record<Lang, Copy> = {
       },
       form: {
         legend: 'Brief',
-        plan: 'Plan',
+        format: 'Format',
+        finish: 'Finish',
+        design: 'Design',
+        quoteLabel: 'Reference price',
+        quoteHint: 'Range in USD. I confirm the exact price when I review the brief.',
         discord: 'Discord',
-        discordHint: 'optional — if you would rather be reached there',
+        discordHint: 'Your Discord username, so I can reply there.',
         references: 'References',
         referencesHint: 'Links to Toyhouse, Drive or Imgur',
         files: 'Reference images',
         filesHint: 'Attach them by hand in the email',
-        submit: 'Compose email',
+        submit: 'Send brief',
         ready: 'Your email opened with everything written.',
         attach: 'Remember to attach {n} file(s) before sending.',
       },
@@ -587,11 +630,6 @@ export const t: Record<Lang, Copy> = {
     footer: {
       tagline: 'Illustration · Design · Digital art',
       credit: 'Developed by josepvg.dev',
-    },
-    plans: {
-      chibi: { name: 'Chibi', tag: 'Icon or full body, full colour' },
-      bust: { name: 'Bust Render', tag: 'Half body, full render' },
-      mega: { name: 'Mega', tag: 'Half body, maximum detail' },
     },
     photoAlts: {
       icon: 'Pink-haired chibi in a lace dress with red horns',

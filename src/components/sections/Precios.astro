@@ -2,7 +2,14 @@
 import { Image } from 'astro:assets';
 import '../../styles/xp/theme.css';
 import '../../styles/xp/precios.css';
-import { plans, photos, entryPrice, featuredPlanIndex, featuredSlideIndex } from '../../data/planes';
+import {
+  designIds,
+  entryPrice,
+  finishIds,
+  formatsForDesign,
+  photos,
+  priceFor,
+} from '../../data/planes';
 import { fill, t, type Lang } from '../../i18n/ui';
 
 interface Props {
@@ -11,18 +18,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const copy = t[lang].pricing;
-const plansCopy = t[lang].plans;
-const featuredPlanName = plansCopy[plans[featuredPlanIndex].id].name;
-
-// Nombre para el aria-label de cada punto: la entrada y el plan a cotizar no
-// viven en `plans`, así que se resuelven con su copia propia.
-const slideNames: Record<string, string> = {
-  icon: copy.entry.name,
-  chibi: plansCopy.chibi.name,
-  bust: plansCopy.bust.name,
-  mega: plansCopy.mega.name,
-  custom: copy.custom.name,
-};
 ---
 
 <section id="precios" class="px-4 py-4 md:px-10 md:py-8">
@@ -37,91 +32,59 @@ const slideNames: Record<string, string> = {
     <hr class="my-6" />
 
     <div
-      class="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_3fr] lg:items-start"
+      class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start"
       data-pricing
-      data-plan-template={copy.choosePlan}
-      data-start-index={featuredSlideIndex}
     >
-      <!-- 40%: precios -->
+      <!-- Matriz de precios: acabados en columnas, formatos en filas. -->
       <div>
-        <ul class="list price-list">
-          <!-- Puerta de entrada: primer renglón, fuera de la escalera. -->
-          <li>
-            <button
-              type="button"
-              class="price-row price-row--entry"
-              data-price-row={0}
-              data-plan-price={entryPrice}
-              aria-controls="precios-carrusel"
-              aria-current={featuredSlideIndex === 0 ? 'true' : 'false'}
-            >
-              <span>
-                <span class="price-row-name" data-plan-name>{copy.entry.name}</span>
-                <span class="price-row-tag">{copy.entry.tag}</span>
-              </span>
-              <span class="price-row-amount">
-                <span>$</span>{entryPrice}
-              </span>
-            </button>
-          </li>
-
+        <table class="price-matrix">
+          <thead>
+            <tr>
+              <th scope="col">{copy.tableFormat}</th>
+              {finishIds.map((finish) => <th scope="col">{copy.finishes[finish]}</th>)}
+            </tr>
+          </thead>
           {
-            plans.map((plan, i) => (
-              <li>
-                <button
-                  type="button"
-                  class="price-row"
-                  data-price-row={i + 1}
-                  data-plan-price={plan.price}
-                  aria-controls="precios-carrusel"
-                  aria-current={i + 1 === featuredSlideIndex ? 'true' : 'false'}
-                >
-                  <span>
-                    <span class="price-row-name" data-plan-name>
-                      {plansCopy[plan.id].name}
-                    </span>
-                    <span class="price-row-tag">{plansCopy[plan.id].tag}</span>
-                  </span>
-                  <span class="price-row-amount">
-                    <span>$</span>{plan.price}
-                  </span>
-                </button>
-              </li>
+            designIds.map((design) => (
+              <tbody>
+                {design === 'custom' && (
+                  <tr class="price-matrix-sub">
+                    <th colspan="4" scope="colgroup">
+                      <span class="price-matrix-sub-name">{copy.designs[design]}</span>
+                      <span class="price-matrix-sub-note">{copy.customNote}</span>
+                    </th>
+                  </tr>
+                )}
+                {formatsForDesign(design).map((format) => (
+                  <tr>
+                    <th scope="row">{copy.formats[format]}</th>
+                    {finishIds.map((finish) => (
+                      <td class="price-cell">
+                        <span class="price-cell-currency">$</span>{priceFor(design, format, finish)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
             ))
           }
+        </table>
 
-          <!-- Plan a cotizar: cierra la lista, sin precio propio. -->
-          <li>
-            <button
-              type="button"
-              class="price-row price-row--custom"
-              data-price-row={photos.length - 1}
-              aria-controls="precios-carrusel"
-              aria-current={photos.length - 1 === featuredSlideIndex ? 'true' : 'false'}
-            >
-              <span>
-                <span class="price-row-name" data-plan-name>{copy.custom.name}</span>
-                <span class="price-row-tag">{copy.custom.body}</span>
-              </span>
-              <span class="price-row-amount price-row-amount--text">
-                {copy.custom.amount}
-              </span>
-            </button>
-          </li>
-        </ul>
+        <p class="price-entry">
+          <strong>{copy.entry.name}</strong> — ${entryPrice} · {copy.entry.tag}
+        </p>
 
         <a
           href="#contacto"
           class="button mt-4 block w-full text-[11px] tracking-[0.12em] uppercase"
-          data-cta
         >
-          {fill(copy.choosePlan, { name: featuredPlanName })}
+          {copy.cta}
         </a>
 
         <p class="price-addons">{copy.addons}</p>
       </div>
 
-      <!-- 60%: carrusel -->
+      <!-- Galería de ejemplos, independiente de la matriz -->
       <div
         id="precios-carrusel"
         role="region"
@@ -139,8 +102,8 @@ const slideNames: Record<string, string> = {
                   role="group"
                   aria-roledescription={copy.slideRole}
                   aria-label={fill(copy.slideLabel, { n: i + 1, total: photos.length })}
-                  aria-hidden={i === featuredSlideIndex ? 'false' : 'true'}
-                  inert={i !== featuredSlideIndex}
+                  aria-hidden={i === 0 ? 'false' : 'true'}
+                  inert={i !== 0}
                 >
                   <Image
                     src={photo.src}
@@ -171,8 +134,8 @@ const slideNames: Record<string, string> = {
                   type="button"
                   class="carousel-dot"
                   data-dot={i}
-                  aria-label={fill(copy.viewPhoto, { name: slideNames[photo.id] })}
-                  aria-current={i === featuredSlideIndex ? 'true' : 'false'}
+                  aria-label={fill(copy.viewPhoto, { name: copy.galleryNames[photo.id] })}
+                  aria-current={i === 0 ? 'true' : 'false'}
                 />
               ))
             }
@@ -221,16 +184,10 @@ const slideNames: Record<string, string> = {
     const track = root.querySelector<HTMLElement>('[data-track]');
     const viewport = root.querySelector<HTMLElement>('[data-viewport]');
     const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
-    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-price-row]'));
     const dots = Array.from(root.querySelectorAll<HTMLElement>('[data-dot]'));
-    const cta = root.querySelector<HTMLElement>('[data-cta]');
-    const ctaTemplate = root.dataset.planTemplate ?? '{name}';
-    const names = rows.map(
-      (row) => row.querySelector('[data-plan-name]')?.textContent?.trim() ?? ''
-    );
     const total = slides.length;
     const carousel = root.querySelector<HTMLElement>('#precios-carrusel') ?? root;
-    let index = Number(root.dataset.startIndex ?? '0') || 0; // arranca en el peldaño destacado
+    let index = 0;
     let startX = 0;
     let dragging = false;
     let dx = 0;
@@ -268,22 +225,7 @@ const slideNames: Record<string, string> = {
         slide.toggleAttribute('inert', !active);
       });
 
-      rows.forEach((row, i) => row.setAttribute('aria-current', String(i === index)));
       dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
-
-      if (cta && names[index]) cta.textContent = ctaTemplate.replace('{name}', names[index]);
-
-      // El correo de Contacto se reescribe con el plan que está a la vista.
-      const price = rows[index]?.dataset.planPrice;
-      const label = names[index];
-
-      if (label) {
-        window.dispatchEvent(
-          new CustomEvent('javi:plan', {
-            detail: { label: price ? `${label} — $${price}` : label },
-          })
-        );
-      }
     };
 
     root.querySelector('[data-prev]')?.addEventListener('click', () => {
@@ -330,12 +272,6 @@ const slideNames: Record<string, string> = {
     viewport?.addEventListener('pointerup', endDrag);
     viewport?.addEventListener('pointercancel', endDrag);
 
-    rows.forEach((row, i) =>
-      row.addEventListener('click', () => {
-        goTo(i);
-        pauseOnInteract();
-      })
-    );
     dots.forEach((dot, i) =>
       dot.addEventListener('click', () => {
         goTo(i);

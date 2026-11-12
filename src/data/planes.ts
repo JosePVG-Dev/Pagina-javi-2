@@ -18,37 +18,53 @@ import rainbowLeopard from '../assets/catalog/10-rainbow-leopard.webp';
 // Solo estructura (ids, precios, imágenes). Los textos traducibles viven en
 // src/i18n/ui.ts, indexados por estos mismos ids.
 
-export const planIds = ['chibi', 'bust', 'mega'] as const;
-export type PlanId = (typeof planIds)[number];
+// Tres ejes combinables: formato del dibujo, acabado y tipo de diseño.
+export const formatIds = ['chibi', 'half', 'full'] as const;
+export type FormatId = (typeof formatIds)[number];
 
-export interface Plan {
-  id: PlanId;
-  price: string;
-}
+export const finishIds = ['sketch', 'simple', 'experimental'] as const;
+export type FinishId = (typeof finishIds)[number];
 
-// Escalera de precios: peldaños separados por saltos de ~2x, no por incrementos.
-// El peldaño destacado es el que debe cargar el margen; el visitante arranca ahí.
-export const plans: Plan[] = [
-  { id: 'chibi', price: '16' },
-  { id: 'bust', price: '50' },
-  { id: 'mega', price: '70' },
-];
+export const designIds = ['oc', 'custom'] as const;
+export type DesignId = (typeof designIds)[number];
 
-export const featuredPlanId: PlanId = 'bust';
+// Matriz de precios: [diseño][formato][acabado]. Rangos en dólares.
+// `oc` = personaje que ya existe; `custom` = personaje diseñado desde cero.
+// El custom solo ofrece chibi y full body: no hay half body custom.
+export const prices: Record<
+  DesignId,
+  Partial<Record<FormatId, Record<FinishId, string>>>
+> = {
+  oc: {
+    chibi: { sketch: '5–6', simple: '8–15', experimental: '20–25' },
+    half: { sketch: '10–12', simple: '18–25', experimental: '35–45' },
+    full: { sketch: '15–20', simple: '28–35', experimental: '55–75' },
+  },
+  custom: {
+    chibi: { sketch: '10', simple: '25–35', experimental: '55–85' },
+    full: { sketch: '20', simple: '35–45', experimental: '75–100' },
+  },
+};
 
-// Precio de la puerta de entrada y etiqueta del plan a cotizar. Van aquí y no en
-// los componentes para que no haya cifras duplicadas.
+// Formatos que existen para un tipo de diseño (el custom no tiene half body).
+export const formatsForDesign = (design: DesignId): readonly FormatId[] =>
+  formatIds.filter((format) => Boolean(prices[design][format]));
+
+// Rango de una combinación concreta; cadena vacía si no existe.
+export const priceFor = (design: DesignId, format: FormatId, finish: FinishId): string =>
+  prices[design][format]?.[finish] ?? '';
+
+// Precio de la puerta de entrada (icono 1:1), fuera de la matriz.
 export const entryPrice = '5';
 
-/* ---------- carrusel de precios ---------- */
+/* ---------- galería de ejemplos ---------- */
 
-// Una diapositiva por renglón de la lista: entrada, los tres planes y el
-// plan a cotizar. El orden de `pricingIds` es el orden del carrusel.
-export const pricingIds = ['icon', 'chibi', 'bust', 'mega', 'custom'] as const;
-export type PricingId = (typeof pricingIds)[number];
+// El carrusel no está atado a la matriz: es una galería de ejemplos.
+export const galleryIds = ['icon', 'chibi', 'bust', 'mega', 'custom'] as const;
+export type GalleryId = (typeof galleryIds)[number];
 
 export interface Photo {
-  id: PricingId;
+  id: GalleryId;
   src: ImageMetadata;
 }
 
@@ -59,13 +75,6 @@ export const photos: Photo[] = [
   { id: 'mega', src: render },
   { id: 'custom', src: custom },
 ];
-
-export const plansById = new Map(plans.map((plan) => [plan.id, plan]));
-
-export const featuredPlanIndex = plans.findIndex((plan) => plan.id === featuredPlanId);
-
-// Índice del mismo plan dentro del carrusel (lleva la puerta de entrada delante).
-export const featuredSlideIndex = pricingIds.indexOf(featuredPlanId);
 
 /* ---------- catálogo ---------- */
 

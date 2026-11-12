@@ -38,7 +38,7 @@ const items = t[lang].catalogItems;
                 class="h-full w-full object-cover"
               />
             </div>
-            <p class="mt-2 px-1 pb-1 text-[9px] uppercase tracking-[0.15em] text-[#4a4a4a] sm:text-[10px]">{items[item.id].type}</p>
+            <p class="mt-2 px-1 pb-1 text-[9px] uppercase tracking-[0.15em] text-[#4a4a4a] sm:text-[10px]">{String(i + 1).padStart(2, '0')}</p>
           </article>
         ))
       }
